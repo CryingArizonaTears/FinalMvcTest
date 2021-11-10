@@ -17,6 +17,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
+    <spring.version>5.3.11</spring.version>
   </properties>
 
   <dependencies>
@@ -44,31 +45,31 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-beans</artifactId>
-      <version>5.3.11</version>
+      <version>${spring.version}</version>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.springframework/spring-core -->
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-core</artifactId>
-      <version>5.3.11</version>
+      <version>${spring.version}</version>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
-      <version>5.3.11</version>
+      <version>${spring.version}</version>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.springframework/spring-tx -->
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-tx</artifactId>
-      <version>5.3.11</version>
+      <version>${spring.version}</version>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.springframework/spring-jdbc -->
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-jdbc</artifactId>
-      <version>5.3.11</version>
+      <version>${spring.version}</version>
     </dependency>
 
     <!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-jpa -->
@@ -94,14 +95,31 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-web</artifactId>
-      <version>5.3.11</version>
+      <version>${spring.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-webmvc</artifactId>
-      <version>5.3.11</version>
+      <version>${spring.version}</version>
     </dependency>
+
+    <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>4.0.1</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.modelmapper/modelmapper -->
+    <dependency>
+      <groupId>org.modelmapper</groupId>
+      <artifactId>modelmapper</artifactId>
+      <version>2.4.4</version>
+    </dependency>
+
+
   </dependencies>
 
   <build>
@@ -150,4 +168,53 @@
       </plugin>
     </plugins>
   </build>
+  <profiles>
+
+    <!-- профиль jetty-run, активируется если был передан параметр runStub (пример mvn clean install -DrunStub ) -->
+    <profile>
+      <id>jetty-run</id>
+      <!-- Условие активации профиля -->
+      <activation>
+        <property>
+          <name>runJetty</name>
+        </property>
+      </activation>
+      <!-- Расширение стандартного процесса сборки -->
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-maven-plugin</artifactId>
+            <version>9.4.38.v20210224</version>
+            <!-- выполняется на стадии package (стандартный жизненный цикл сборки maven) и выполняет таск run-war mvn clean package jetty:run-war )
+            (можно запускать из консоли, но по умолчанию этот плагин не настроен, он есть только с профилем jetty-run) -->
+            <executions>
+              <execution>
+                <id>start-jetty</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>stop</goal>
+                  <goal>run-war</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <stopKey>STOP</stopKey>
+              <stopPort>9001</stopPort>
+
+              <webAppConfig>
+                <contextPath>/*</contextPath>
+              </webAppConfig>
+
+              <httpConnector>
+                <port>8080</port>
+                <host>localhost</host>
+              </httpConnector>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+  </profiles>
 </project>

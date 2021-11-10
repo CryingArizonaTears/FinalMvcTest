@@ -18,10 +18,10 @@ public class Chat extends AbstractModel {
     private Long id;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "firstUserId", nullable = false)
-    private UserProfile FirstUser;
+    private UserProfile firstUser;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "secondUserId", nullable = false)
-    private UserProfile SecondUser;
+    private UserProfile secondUser;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "chat")
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Message> messages;
@@ -30,8 +30,8 @@ public class Chat extends AbstractModel {
     public String toString() {
         return "Chat{" +
                 "id=" + id +
-                ", FirstUser=" + FirstUser.getId() +
-                ", SecondUser=" + SecondUser.getId() +
+                ", FirstUser=" + firstUser.getId() +
+                ", SecondUser=" + secondUser.getId() +
                 ", messages=" + messages +
                 '}';
     }

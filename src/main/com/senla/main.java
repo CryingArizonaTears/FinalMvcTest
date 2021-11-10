@@ -2,7 +2,8 @@ package com.senla;
 
 import com.senla.api.dao.IUserProfileDao;
 import com.senla.api.service.*;
-import com.senla.util.SpringConfig;
+import com.senla.config.SpringConfig;
+import com.senla.controllers.UserController;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 
@@ -10,7 +11,7 @@ public class main {
     public static void main(String[] args) {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(SpringConfig.class);
         IUserProfileService userProfileService = context.getBean(IUserProfileService.class);
-
+        UserController userController = context.getBean(UserController.class);
 
         IAdService adService = context.getBean(IAdService.class);
         ICommentService commentService = context.getBean(ICommentService.class);

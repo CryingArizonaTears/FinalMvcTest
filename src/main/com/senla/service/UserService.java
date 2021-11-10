@@ -4,6 +4,8 @@ import com.senla.api.dao.IUserLoginDao;
 import com.senla.api.dao.IUserProfileDao;
 import com.senla.api.service.IUserProfileService;
 import com.senla.model.*;
+import com.senla.model.dto.UserProfileDto;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,11 +14,13 @@ import java.util.ArrayList;
 
 @Transactional
 @Service
-public class UserProfileService implements IUserProfileService {
+public class UserService implements IUserProfileService {
     @Autowired
     private IUserLoginDao userLoginDao;
     @Autowired
     private IUserProfileDao userProfileDao;
+    @Autowired
+    private ModelMapper modelMapper;
 
 
     @Override
@@ -49,5 +53,11 @@ public class UserProfileService implements IUserProfileService {
         userProfileDao.update(userProfile);
         userLoginDao.update(userLogin);
 
+    }
+
+    @Override
+    public UserProfileDto getById(Long id) {
+        UserProfile userProfile = userProfileDao.get(id);
+        return modelMapper.map(userProfile, UserProfileDto.class);
     }
 }

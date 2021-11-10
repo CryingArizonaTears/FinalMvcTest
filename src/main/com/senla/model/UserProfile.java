@@ -23,14 +23,6 @@ public class UserProfile extends AbstractModel {
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
-
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "FirstUser")
-//    @LazyCollection(LazyCollectionOption.FALSE)
-//    private List<Chat> createdChats;
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "SecondUser")
-//    @LazyCollection(LazyCollectionOption.FALSE)
-//    private List<Chat> receivedChats;
-
     @ManyToMany(cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(
