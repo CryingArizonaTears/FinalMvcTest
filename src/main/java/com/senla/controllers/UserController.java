@@ -36,7 +36,6 @@ public class UserController {
 
     @PutMapping("/{id}/editLogin")
     public ResponseEntity<Void> updateUserLogin(@PathVariable Long id, @RequestBody UserLoginDto userLoginDto) {
-        System.out.println(userLoginDto);
         userLoginDto.setId(id);
         userService.editLogin(userLoginDto);
         return ResponseEntity.noContent().build();
