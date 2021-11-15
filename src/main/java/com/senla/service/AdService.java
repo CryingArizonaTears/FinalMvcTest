@@ -4,8 +4,6 @@ import com.senla.api.dao.IAdDao;
 import com.senla.api.service.IAdService;
 import com.senla.model.Ad;
 import com.senla.model.AdStatus;
-import com.senla.model.Category;
-import com.senla.model.UserProfile;
 import com.senla.model.dto.AdDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -25,69 +24,86 @@ public class AdService implements IAdService {
     private ModelMapper modelMapper;
 
     @Override
-    public List<Ad> getCurrentAds() {
-        return adDao.getCurrentAds();
+    public List getCurrentAds() {
+        List<Ad> ads = adDao.getCurrentAds();
+        List<AdDto> adsDto = ads
+                .stream()
+                .map(ad -> modelMapper.map(ad, AdDto.class))
+                .collect(Collectors.toList());
+        return adsDto;
     }
 
     @Override
-    public List<Ad> getByName(String name) {
+    public List getByName(String name) {
         return adDao.getByName(name);
     }
 
     @Override
     public AdDto getById(Long id) {
-        Ad ad = adDao.get(id);
-        return modelMapper.map(ad, AdDto.class);
+        return modelMapper.map(adDao.get(id), AdDto.class);
     }
 
     @Override
-    public List<Ad> filterByCategory(Long id) {
-        return adDao.filterByCategory(id);
+    public List filterByCategory(Long id) {
+        List<Ad> ads = adDao.filterByCategory(id);
+        List<AdDto> adsDto = ads
+                .stream()
+                .map(ad -> modelMapper.map(ad, AdDto.class))
+                .collect(Collectors.toList());
+        return adsDto;
     }
 
     @Override
-    public List<Ad> filterByUserId(Long id) {
-        return adDao.filterByUserId(id);
+    public List filterByUserId(Long id) {
+        List<Ad> ads = adDao.filterByUserId(id);
+        List<AdDto> adsDto = ads
+                .stream()
+                .map(ad -> modelMapper.map(ad, AdDto.class))
+                .collect(Collectors.toList());
+        return adsDto;
     }
 
     @Override
-    public List<Ad> filterByPrice(Double from, Double to) {
-        return adDao.filterByPrice(from, to);
+    public List filterByPrice(Double from, Double to) {
+        List<Ad> ads = adDao.filterByPrice(from, to);
+        List<AdDto> adsDto = ads
+                .stream()
+                .map(ad -> modelMapper.map(ad, AdDto.class))
+                .collect(Collectors.toList());
+        return adsDto;
     }
 
     public List filterClosedByUserId(Long id) {
-        return adDao.filterClosedAdsByUserId(id);
+        List<Ad> ads = adDao.filterClosedAdsByUserId(id);
+        List<AdDto> adsDto = ads
+                .stream()
+                .map(ad -> modelMapper.map(ad, AdDto.class))
+                .collect(Collectors.toList());
+        return adsDto;
     }
 
 
     @Override
-    public void createAd(String name, Long categoryId, String description, Double price, Long userId) {
-        Ad ad = new Ad();
-        ad.setName(name);
-        Category category = new Category();
-        category.setId(categoryId);
-        ad.setCategory(category);
-        ad.setDescription(description);
-        ad.setPrice(price);
+    public void createAd(AdDto adDto) {
+        Ad ad = modelMapper.map(adDto, Ad.class);
         ad.setStatus(AdStatus.OPEN);
         ad.setCreationDate(LocalDate.now());
-        UserProfile userProfile = new UserProfile();
-        userProfile.setId(userId);
-        ad.setUserProfile(userProfile);
         ad.setComments(new ArrayList<>());
+        ad.setMaintenances(new ArrayList<>());
         adDao.save(ad);
     }
 
 
     @Override
-    public void editAd(Long adId, String name, Long categoryId, String description, Double price) {
-        Ad ad = adDao.get(adId);
-        ad.setName(name);
-        Category category = new Category();
-        category.setId(categoryId);
-        ad.setCategory(category);
-        ad.setDescription(description);
-        ad.setPrice(price);
+    public void editAd(Long id, AdDto adDto) {
+        Ad ad = adDao.get(id);
+        Ad dtoAd = modelMapper.map(adDto, Ad.class);
+        ad.setName(dtoAd.getName());
+        if (dtoAd.getCategory() != null){
+            ad.setCategory(dtoAd.getCategory());
+        }
+        ad.setDescription(dtoAd.getDescription());
+        ad.setPrice(dtoAd.getPrice());
         adDao.update(ad);
     }
 

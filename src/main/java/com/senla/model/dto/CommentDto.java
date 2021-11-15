@@ -1,6 +1,7 @@
 package com.senla.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,9 +12,8 @@ import java.time.LocalDate;
 public class CommentDto {
 
     private Long id;
-    @JsonBackReference
+    @JsonIgnore
     private AdDto ad;
-    @JsonBackReference
     private UserProfileDto userProfile;
     private String text;
     private LocalDate creationDate;

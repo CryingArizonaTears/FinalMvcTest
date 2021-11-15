@@ -7,23 +7,23 @@ import java.util.List;
 
 public interface IAdService {
 
-    List<Ad> getCurrentAds();
+    List getCurrentAds();
 
-    List<Ad> getByName(String name);
+    List getByName(String name);
 
     AdDto getById(Long id);
 
-    List<Ad> filterByCategory(Long id);
+    List filterByCategory(Long id);
 
-    List<Ad> filterByUserId(Long id);
+    List filterByUserId(Long id);
 
-    List<Ad> filterByPrice(Double from, Double to);
+    List filterByPrice(Double from, Double to);
 
     List filterClosedByUserId(Long id);
 
-    void createAd(String name, Long categoryId, String description, Double price, Long userId);
+    void createAd(AdDto adDto);
 
-    void editAd(Long adId, String name, Long categoryId, String description, Double price);
+    void editAd(Long id, AdDto adDto);
 
     void deleteAd(Long id);
 }

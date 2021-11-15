@@ -1,6 +1,8 @@
 package com.senla.api.service;
 
+import com.senla.model.dto.CommentDto;
+
 public interface ICommentService {
 
-    void createComment(Long userId, Long adId, String text);
+    void createComment(Long id, CommentDto commentDto);
 }

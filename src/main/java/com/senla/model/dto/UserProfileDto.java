@@ -24,5 +24,6 @@ public class UserProfileDto {
     @JsonIgnore
     private List<RatingDto> ratings;
     private Double avgRating;
+    @JsonIgnore
     private UserLoginDto userLogin;
 }

@@ -5,6 +5,8 @@ import com.senla.api.service.ICommentService;
 import com.senla.model.Ad;
 import com.senla.model.Comment;
 import com.senla.model.UserProfile;
+import com.senla.model.dto.CommentDto;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,17 +18,15 @@ import java.time.LocalDate;
 public class CommentService implements ICommentService {
     @Autowired
     private ICommentDao commentDao;
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Override
-    public void createComment(Long userId, Long adId, String text) {
-        Comment comment = new Comment();
-        UserProfile userProfile = new UserProfile();
-        userProfile.setId(userId);
+    public void createComment(Long id, CommentDto commentDto) {
+        Comment comment = modelMapper.map(commentDto, Comment.class);
         Ad ad = new Ad();
-        ad.setId(adId);
+        ad.setId(id);
         comment.setAd(ad);
-        comment.setUserProfile(userProfile);
-        comment.setText(text);
         comment.setCreationDate(LocalDate.now());
         commentDao.save(comment);
 
