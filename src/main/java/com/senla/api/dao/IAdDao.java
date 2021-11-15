@@ -16,15 +16,9 @@ public interface IAdDao {
 
     void delete(Long id);
 
-    List<Ad> getCurrentAds();
+    List<Ad> getAll(String sort, Long id, Double from, Double to);
 
-    List filterClosedAdsByUserId(Long id);
+    List<Ad> filterClosedAdsByUserId(Long id);
 
     List<Ad> getByName(String name);
-
-    List<Ad> filterByCategory(Long id);
-
-    List<Ad> filterByUserId(Long id);
-
-    List<Ad> filterByPrice(Double from, Double to);
 }

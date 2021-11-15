@@ -19,22 +19,15 @@ public class AdController {
     @Autowired
     private ICommentService commentService;
 
+
     @GetMapping()
     public ResponseEntity<List<AdDto>> getAds(@RequestParam(defaultValue = "all") String sort,
-                                              @RequestParam(defaultValue = "0") Long id,
-                                              @RequestParam(defaultValue = "0") Double from,
-                                              @RequestParam(defaultValue = "0") Double to) {
-        switch (sort) {
-            case ("category"):
-                return ResponseEntity.ok(adService.filterByCategory(id));
-            case ("user"):
-                return ResponseEntity.ok(adService.filterByUserId(id));
-            case ("price"):
-                return ResponseEntity.ok(adService.filterByPrice(from, to));
-            default:
-                return ResponseEntity.ok(adService.getCurrentAds());
-        }
+                                              @RequestParam(required = false) Long id,
+                                              @RequestParam(required = false) Double from,
+                                              @RequestParam(required = false) Double to) {
+        return ResponseEntity.ok(adService.getAll(sort, id, from, to));
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<AdDto> getAdById(@PathVariable Long id) {
@@ -48,8 +41,8 @@ public class AdController {
     }
 
     @PutMapping("/{id}/edit")
-    public ResponseEntity<Void> updateAd(@PathVariable Long id, @RequestBody AdDto adDto) {
-        adService.editAd(id, adDto);
+    public ResponseEntity<Void> updateAd(@RequestBody AdDto adDto) {
+        adService.editAd(adDto);
         return ResponseEntity.noContent().build();
     }
 
@@ -60,7 +53,7 @@ public class AdController {
     }
 
     @PostMapping("/{id}/addComment")
-    public ResponseEntity<Void> deleteAd(@PathVariable Long id,
+    public ResponseEntity<Void> createComment(@PathVariable Long id,
                                          @RequestBody CommentDto commentDto) {
         commentService.createComment(id, commentDto);
         return ResponseEntity.noContent().build();

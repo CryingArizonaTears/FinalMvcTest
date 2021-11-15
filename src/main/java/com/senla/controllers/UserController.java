@@ -35,15 +35,14 @@ public class UserController {
     }
 
     @PutMapping("/{id}/editLogin")
-    public ResponseEntity<Void> updateUserLogin(@PathVariable Long id, @RequestBody UserLoginDto userLoginDto) {
-        userLoginDto.setId(id);
+    public ResponseEntity<Void> updateUserLogin(@RequestBody UserLoginDto userLoginDto) {
         userService.editLogin(userLoginDto);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}/editProfile")
-    public ResponseEntity<Void> updateUserProfile(@PathVariable Long id, @RequestBody UserProfileDto userProfileDto) {
-        userService.editProfile(id, userProfileDto);
+    public ResponseEntity<Void> updateUserProfile(@RequestBody UserProfileDto userProfileDto) {
+        userService.editProfile(userProfileDto);
         return ResponseEntity.noContent().build();
     }
 

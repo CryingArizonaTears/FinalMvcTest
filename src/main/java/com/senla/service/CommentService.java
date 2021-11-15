@@ -4,7 +4,6 @@ import com.senla.api.dao.ICommentDao;
 import com.senla.api.service.ICommentService;
 import com.senla.model.Ad;
 import com.senla.model.Comment;
-import com.senla.model.UserProfile;
 import com.senla.model.dto.CommentDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +28,5 @@ public class CommentService implements ICommentService {
         comment.setAd(ad);
         comment.setCreationDate(LocalDate.now());
         commentDao.save(comment);
-
     }
 }

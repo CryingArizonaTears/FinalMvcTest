@@ -8,9 +8,9 @@ public interface IUserService {
 
     void registration(UserDto userDto);
 
-    public void editLogin(UserLoginDto userLoginDto);
+    void editLogin(UserLoginDto userLoginDto);
 
-    public void editProfile(Long id, UserProfileDto userProfileDto);
+    void editProfile(UserProfileDto userProfileDto);
 
-    public UserProfileDto getById(Long id);
+    UserProfileDto getById(Long id);
 }

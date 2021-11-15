@@ -47,17 +47,16 @@ public class UserService implements IUserService {
     public void editLogin(UserLoginDto userLoginDto) {
 
         UserLogin userLogin = modelMapper.map(userLoginDto, UserLogin.class);
-        System.out.println(userLogin.toString());
         userLoginDao.update(userLogin);
     }
 
     @Override
-    public void editProfile(Long id, UserProfileDto userProfileDto) {
+    public void editProfile(UserProfileDto userProfileDto) {
 
-        UserProfile userProfile = modelMapper.map(userProfileDto, UserProfile.class);
-        UserProfile userProfile1 = userProfileDao.get(id);
-        userProfile1.setFullName(userProfile.getFullName());
-        userProfileDao.update(userProfile1);
+        UserProfile dtoUserProfile = modelMapper.map(userProfileDto, UserProfile.class);
+        UserProfile userProfile = userProfileDao.get(dtoUserProfile.getId());
+        userProfile.setFullName(dtoUserProfile.getFullName());
+        userProfileDao.update(userProfile);
 
     }
 
