@@ -1,6 +1,5 @@
 package com.senla.controllers;
 
-import com.senla.api.service.IAdService;
 import com.senla.api.service.IUserService;
 import com.senla.model.dto.AdDto;
 import com.senla.model.dto.UserDto;
@@ -19,8 +18,6 @@ public class UserController {
 
     @Autowired
     private IUserService userService;
-    @Autowired
-    private IAdService adService;
 
 
     @GetMapping("/{id}")
@@ -34,13 +31,13 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}/editLogin")
+    @PutMapping("/login")
     public ResponseEntity<Void> updateUserLogin(@RequestBody UserLoginDto userLoginDto) {
         userService.editLogin(userLoginDto);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}/editProfile")
+    @PutMapping("/profile")
     public ResponseEntity<Void> updateUserProfile(@RequestBody UserProfileDto userProfileDto) {
         userService.editProfile(userProfileDto);
         return ResponseEntity.noContent().build();
@@ -48,6 +45,6 @@ public class UserController {
 
     @GetMapping("/{id}/salesHistory")
     public ResponseEntity<List<AdDto>> getUserSalesById(@PathVariable Long id) {
-        return ResponseEntity.ok(adService.filterClosedByUserId(id));
+        return ResponseEntity.ok(userService.filterClosedByUserId(id));
     }
 }

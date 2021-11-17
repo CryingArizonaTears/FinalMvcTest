@@ -5,6 +5,7 @@ import com.senla.api.service.ICommentService;
 import com.senla.model.Ad;
 import com.senla.model.Comment;
 import com.senla.model.dto.CommentDto;
+import com.senla.modelMapperMethods.ModelMapperMapList;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ public class CommentService implements ICommentService {
     @Autowired
     private ICommentDao commentDao;
     @Autowired
-    private ModelMapper modelMapper;
+    private ModelMapperMapList modelMapper;
 
     @Override
     public void createComment(Long id, CommentDto commentDto) {

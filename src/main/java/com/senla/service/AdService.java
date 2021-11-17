@@ -5,8 +5,8 @@ import com.senla.api.service.IAdService;
 import com.senla.model.Ad;
 import com.senla.model.AdStatus;
 import com.senla.model.dto.AdDto;
+import com.senla.model.dto.filter.AdFilter;
 import com.senla.modelMapperMethods.ModelMapperMapList;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,27 +21,17 @@ public class AdService implements IAdService {
     @Autowired
     private IAdDao adDao;
     @Autowired
-    private ModelMapper modelMapper;
-    @Autowired
-    private ModelMapperMapList modelMapperMapList;
+    private ModelMapperMapList modelMapper;
 
-    public List<AdDto> getAll(String sort, Long id, Double from, Double to) {
-        return modelMapperMapList.mapList(adDao.getAll(sort, id, from, to), AdDto.class);
+    public List<AdDto> getByFilter(AdFilter adFilter) {
+        return modelMapper.mapList(adDao.getByFilter(adFilter), AdDto.class);
     }
 
-    @Override
-    public List<AdDto> getByName(String name) {
-        return modelMapperMapList.mapList(adDao.getByName(name), AdDto.class);
-    }
 
-    @Override
-    public AdDto getById(Long id) {
-        return modelMapper.map(adDao.get(id), AdDto.class);
-    }
-
-    public List<AdDto> filterClosedByUserId(Long id) {
-        return modelMapperMapList.mapList(adDao.filterClosedAdsByUserId(id), AdDto.class);
-    }
+//    @Override
+//    public AdDto getById(Long id) {
+//        return modelMapper.map(adDao.get(id), AdDto.class);
+//    }
 
 
     @Override

@@ -1,6 +1,7 @@
 package com.senla.api.dao;
 
 import com.senla.model.Ad;
+import com.senla.model.dto.filter.AdFilter;
 
 import java.util.List;
 
@@ -16,9 +17,7 @@ public interface IAdDao {
 
     void delete(Long id);
 
-    List<Ad> getAll(String sort, Long id, Double from, Double to);
+    List<Ad> getByFilter(AdFilter adFilter);
 
     List<Ad> filterClosedAdsByUserId(Long id);
-
-    List<Ad> getByName(String name);
 }

@@ -1,20 +1,23 @@
 package com.senla.service;
 
+import com.senla.api.dao.IAdDao;
 import com.senla.api.dao.IUserLoginDao;
 import com.senla.api.dao.IUserProfileDao;
 import com.senla.api.service.IUserService;
 import com.senla.model.Role;
 import com.senla.model.UserLogin;
 import com.senla.model.UserProfile;
+import com.senla.model.dto.AdDto;
 import com.senla.model.dto.UserDto;
 import com.senla.model.dto.UserLoginDto;
 import com.senla.model.dto.UserProfileDto;
-import org.modelmapper.ModelMapper;
+import com.senla.modelMapperMethods.ModelMapperMapList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Transactional
 @Service
@@ -24,7 +27,9 @@ public class UserService implements IUserService {
     @Autowired
     private IUserProfileDao userProfileDao;
     @Autowired
-    private ModelMapper modelMapper;
+    private IAdDao adDao;
+    @Autowired
+    private ModelMapperMapList modelMapper;
 
 
     @Override
@@ -64,5 +69,11 @@ public class UserService implements IUserService {
     public UserProfileDto getById(Long id) {
         UserProfile userProfile = userProfileDao.get(id);
         return modelMapper.map(userProfile, UserProfileDto.class);
+    }
+
+
+    @Override
+    public List<AdDto> filterClosedByUserId(Long id) {
+        return modelMapper.mapList(adDao.filterClosedAdsByUserId(id), AdDto.class);
     }
 }

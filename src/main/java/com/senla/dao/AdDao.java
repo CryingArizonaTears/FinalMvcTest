@@ -2,12 +2,17 @@ package com.senla.dao;
 
 import com.senla.api.dao.IAdDao;
 import com.senla.model.Ad;
-import org.hibernate.Session;
+import com.senla.model.AdStatus;
+import com.senla.model.dto.filter.AdFilter;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
-import javax.persistence.Query;
-import java.time.LocalDate;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.util.ArrayList;
 import java.util.List;
 
 @Transactional
@@ -19,64 +24,63 @@ public class AdDao extends AbstractDao<Ad> implements IAdDao {
         return Ad.class;
     }
 
-    public List<Ad> getAll(String sort, Long id, Double from, Double to) {
-        switch (sort) {
-            case ("all"):
-                return getCurrentAds();
-            case ("category"):
-                return filterByCategory(id);
-            case ("user"):
-                return filterByUserId(id);
-            case ("price"):
-                return filterByPrice(from, to);
+    @Override
+    public List<Ad> getByFilter(AdFilter adFilter) {
+        CriteriaBuilder builder = getCurrentSession().getCriteriaBuilder();
+        CriteriaQuery<Ad> query = builder.createQuery(Ad.class);
+        Root<Ad> root = query.from(Ad.class);
+        query.where(adsPredicate(adFilter, builder, root));
+        if (adFilter.getOrderBy() != null && adFilter.getOrderDirection() != null) {
+            if (adFilter.getOrderDirection().equals("asc")) {
+                query.orderBy(builder.asc(root.get(adFilter.getOrderBy())));
+            }
+            if (adFilter.getOrderDirection().equals("desc")) {
+                query.orderBy(builder.desc(root.get(adFilter.getOrderBy())));
+            }
         }
-        return null;
-    }
-
-
-    public List<Ad> filterClosedAdsByUserId(Long id) {
-        Query query = getCurrentSession().createQuery("from Ad a where a.category = '" + id + "' AND a.status = 'CLOSED'");
-        return (List<Ad>) query.getResultList();
+        CriteriaQuery<Ad> all = query.select(root);
+        return getCurrentSession().createQuery(all).getResultList();
     }
 
 
     @Override
-    public List<Ad> getByName(String name) {
-
-        Query query = getCurrentSession().createQuery("from Ad a where a.name = '" + name + "' AND a.status = 'OPEN'");
-        return (List<Ad>) query.getResultList();
+    public List<Ad> filterClosedAdsByUserId(Long id) {
+//        Query query = getCurrentSession().createQuery("from Ad a where a.category = '" + id + "' AND a.status = 'CLOSED'");
+        CriteriaBuilder builder = getCurrentSession().getCriteriaBuilder();
+        CriteriaQuery<Ad> query = builder.createQuery(Ad.class);
+        Root<Ad> root = query.from(Ad.class);
+        query.where(adsClosedPredicate(id, builder, root));
+        CriteriaQuery<Ad> all = query.select(root);
+        return getCurrentSession().createQuery(all).getResultList();
+//        return (List<Ad>) query.getResultList();
     }
 
-    private List<Ad> getCurrentAds() {
-
-        Session session = getCurrentSession();
-        Query query1 = session.createQuery("select a from Ad a join a.userProfile u where a.status = 'OPEN' and a.premiumUntilDate >= '" + LocalDate.now() + "' order by avgRating desc");
-        Query query2 = session.createQuery("select a from Ad a join a.userProfile u where a.status = 'OPEN' and (a.premiumUntilDate < '" + LocalDate.now() + "' or a.premiumUntilDate = null) order by avgRating desc");
-        List list1 = query1.getResultList();
-        List list2 = query2.getResultList();
-        list1.addAll(list2);
-        return (List<Ad>) list1;
+    private Predicate[] adsClosedPredicate(Long id, CriteriaBuilder builder, Root<Ad> root) {
+        List<Predicate> predicates = new ArrayList<>();
+        predicates.add(builder.equal(root.join("userProfile").get("id"), id));
+        predicates.add(builder.equal(root.get("status"), AdStatus.CLOSED));
+        return predicates.toArray(new Predicate[]{});
     }
 
+    private Predicate[] adsPredicate(AdFilter adFilter, CriteriaBuilder builder, Root<Ad> root) {
+        List<Predicate> predicates = new ArrayList<>();
 
-    private List<Ad> filterByCategory(Long id) {
-
-        Query query = getCurrentSession().createQuery("from Ad a where a.category = '" + id + "' AND a.status = 'OPEN'");
-        return (List<Ad>) query.getResultList();
-    }
-
-
-    private List<Ad> filterByUserId(Long id) {
-
-        Query query = getCurrentSession().createQuery("from Ad a where a.userProfile = '" + id + "' AND a.status = 'OPEN'");
-        return (List<Ad>) query.getResultList();
-    }
-
-
-    private List<Ad> filterByPrice(Double from, Double to) {
-
-        Query query = getCurrentSession().createQuery("from Ad a where a.price >= " + from + "AND a.price <=" + to + "AND a.status = 'OPEN'");
-        return (List<Ad>) query.getResultList();
+        if (!ObjectUtils.isEmpty(adFilter.getName())) {
+            predicates.add(builder.like(root.get("name"), "%" + adFilter.getName() + "%"));
+        }
+        if (!ObjectUtils.isEmpty(adFilter.getCategoryName())) {
+            predicates.add(builder.like(root.join("category").get("name"), "%" + adFilter.getCategoryName() + "%"));
+        }
+        if (adFilter.getUserId() != null) {
+            predicates.add(builder.equal(root.join("userProfile").get("id"), adFilter.getUserId()));
+        }
+        if (adFilter.getPriceFrom() != null) {
+            predicates.add(builder.greaterThanOrEqualTo(root.get("price"), adFilter.getPriceFrom()));
+        }
+        if (adFilter.getPriceTo() != null) {
+            predicates.add(builder.lessThanOrEqualTo(root.get("price"), adFilter.getPriceTo()));
+        }
+        return predicates.toArray(new Predicate[]{});
     }
 
 }

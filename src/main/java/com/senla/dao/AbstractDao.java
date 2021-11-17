@@ -34,7 +34,6 @@ public abstract class AbstractDao<T extends AbstractModel> {
     public T update(T entity) {
         getCurrentSession().merge(entity);
         return entity;
-
     }
 
 
