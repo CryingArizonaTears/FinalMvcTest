@@ -21,14 +21,9 @@ public class AdController {
     private ICommentService commentService;
 
     @GetMapping()
-    public ResponseEntity<List<AdDto>> getAdsByCategory(AdFilter filter) {
+    public ResponseEntity<List<AdDto>> getAdsByFilter(AdFilter filter) {
         return ResponseEntity.ok(adService.getByFilter(filter));
     }
-
-//    @GetMapping("/{id}")
-//    public ResponseEntity<AdDto> getAdById(@PathVariable Long id) {
-//        return ResponseEntity.ok(adService.getById(id));
-//    }
 
     @PostMapping
     public ResponseEntity<Void> createAd(@RequestBody AdDto adDto) {

@@ -11,6 +11,7 @@ import com.senla.model.dto.AdDto;
 import com.senla.model.dto.UserDto;
 import com.senla.model.dto.UserLoginDto;
 import com.senla.model.dto.UserProfileDto;
+import com.senla.model.dto.filter.AdFilter;
 import com.senla.modelMapperMethods.ModelMapperMapList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -73,7 +74,7 @@ public class UserService implements IUserService {
 
 
     @Override
-    public List<AdDto> salesHistory(Long id) {
-        return modelMapper.mapList(adDao.filterClosedAdsByUserId(id), AdDto.class);
+    public List<AdDto> salesHistory(AdFilter adFilter) {
+        return modelMapper.mapList(adDao.getByFilter(adFilter), AdDto.class);
     }
 }

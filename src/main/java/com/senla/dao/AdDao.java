@@ -42,26 +42,6 @@ public class AdDao extends AbstractDao<Ad> implements IAdDao {
         return getCurrentSession().createQuery(all).getResultList();
     }
 
-
-    @Override
-    public List<Ad> filterClosedAdsByUserId(Long id) {
-//        Query query = getCurrentSession().createQuery("from Ad a where a.category = '" + id + "' AND a.status = 'CLOSED'");
-        CriteriaBuilder builder = getCurrentSession().getCriteriaBuilder();
-        CriteriaQuery<Ad> query = builder.createQuery(Ad.class);
-        Root<Ad> root = query.from(Ad.class);
-        query.where(adsClosedPredicate(id, builder, root));
-        CriteriaQuery<Ad> all = query.select(root);
-        return getCurrentSession().createQuery(all).getResultList();
-//        return (List<Ad>) query.getResultList();
-    }
-
-    private Predicate[] adsClosedPredicate(Long id, CriteriaBuilder builder, Root<Ad> root) {
-        List<Predicate> predicates = new ArrayList<>();
-        predicates.add(builder.equal(root.join("userProfile").get("id"), id));
-        predicates.add(builder.equal(root.get("status"), AdStatus.CLOSED));
-        return predicates.toArray(new Predicate[]{});
-    }
-
     private Predicate[] adsPredicate(AdFilter adFilter, CriteriaBuilder builder, Root<Ad> root) {
         List<Predicate> predicates = new ArrayList<>();
 
@@ -79,6 +59,12 @@ public class AdDao extends AbstractDao<Ad> implements IAdDao {
         }
         if (adFilter.getPriceTo() != null) {
             predicates.add(builder.lessThanOrEqualTo(root.get("price"), adFilter.getPriceTo()));
+        }
+        if (adFilter.getStatus() != null) {
+            predicates.add(builder.equal(root.get("status"), AdStatus.valueOf(adFilter.getStatus())));
+        }
+        if (adFilter.getId() != null) {
+            predicates.add(builder.equal(root.get("id"), adFilter.getId()));
         }
         return predicates.toArray(new Predicate[]{});
     }

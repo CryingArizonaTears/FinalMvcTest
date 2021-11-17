@@ -5,6 +5,7 @@ import com.senla.model.dto.AdDto;
 import com.senla.model.dto.UserDto;
 import com.senla.model.dto.UserLoginDto;
 import com.senla.model.dto.UserProfileDto;
+import com.senla.model.dto.filter.AdFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,6 +46,9 @@ public class UserController {
 
     @GetMapping("/{id}/salesHistory")
     public ResponseEntity<List<AdDto>> getUserSalesById(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.salesHistory(id));
+        AdFilter adFilter = new AdFilter();
+        adFilter.setUserId(id);
+        adFilter.setStatus("CLOSED");
+        return ResponseEntity.ok(userService.salesHistory(adFilter));
     }
 }

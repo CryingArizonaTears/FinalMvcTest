@@ -18,6 +18,4 @@ public interface IAdDao {
     void delete(Long id);
 
     List<Ad> getByFilter(AdFilter adFilter);
-
-    List<Ad> filterClosedAdsByUserId(Long id);
 }

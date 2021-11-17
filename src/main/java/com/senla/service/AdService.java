@@ -28,19 +28,11 @@ public class AdService implements IAdService {
     }
 
 
-//    @Override
-//    public AdDto getById(Long id) {
-//        return modelMapper.map(adDao.get(id), AdDto.class);
-//    }
-
-
     @Override
     public void createAd(AdDto adDto) {
         Ad ad = modelMapper.map(adDto, Ad.class);
         ad.setStatus(AdStatus.OPEN);
         ad.setCreationDate(LocalDate.now());
-        ad.setComments(new ArrayList<>());
-        ad.setMaintenances(new ArrayList<>());
         adDao.save(ad);
     }
 
