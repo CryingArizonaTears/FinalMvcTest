@@ -73,7 +73,7 @@ public class UserService implements IUserService {
 
 
     @Override
-    public List<AdDto> filterClosedByUserId(Long id) {
+    public List<AdDto> salesHistory(Long id) {
         return modelMapper.mapList(adDao.filterClosedAdsByUserId(id), AdDto.class);
     }
 }

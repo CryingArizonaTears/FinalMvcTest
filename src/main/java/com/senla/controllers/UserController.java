@@ -45,6 +45,6 @@ public class UserController {
 
     @GetMapping("/{id}/salesHistory")
     public ResponseEntity<List<AdDto>> getUserSalesById(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.filterClosedByUserId(id));
+        return ResponseEntity.ok(userService.salesHistory(id));
     }
 }

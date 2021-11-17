@@ -17,5 +17,5 @@ public interface IUserService {
 
     UserProfileDto getById(Long id);
 
-    List<AdDto> filterClosedByUserId(Long id);
+    List<AdDto> salesHistory(Long id);
 }
