@@ -30,14 +30,6 @@ public class ChatDao extends AbstractDao<Chat> implements IChatDao {
         CriteriaQuery<Chat> query = builder.createQuery(Chat.class);
         Root<Chat> root = query.from(Chat.class);
         query.where(chatsPredicate(chatFilter, builder, root));
-//        if (adFilter.getOrderBy() != null && adFilter.getOrderDirection() != null) {
-//            if (adFilter.getOrderDirection().equals("asc")) {
-//                query.orderBy(builder.asc(root.get(adFilter.getOrderBy())));
-//            }
-//            if (adFilter.getOrderDirection().equals("desc")) {
-//                query.orderBy(builder.desc(root.get(adFilter.getOrderBy())));
-//            }
-//        }
         CriteriaQuery<Chat> all = query.select(root);
         return getCurrentSession().createQuery(all).getResultList();
     }
@@ -47,6 +39,15 @@ public class ChatDao extends AbstractDao<Chat> implements IChatDao {
 
         if (chatFilter.getId() != null) {
             predicates.add(builder.equal(root.get("id"), chatFilter.getId()));
+        }
+        if (chatFilter.getName() != null) {
+            predicates.add(builder.like(root.get("name"), "%" + chatFilter.getName() + "%"));
+        }
+        if (chatFilter.getText() != null) {
+            predicates.add(builder.like(root.join("messages").get("text"), "%" + chatFilter.getText() + "%"));
+        }
+        if (chatFilter.getUserId() != null) {
+            predicates.add(builder.equal(root.join("users").get("id"), chatFilter.getUserId()));
         }
         return predicates.toArray(new Predicate[]{});
     }

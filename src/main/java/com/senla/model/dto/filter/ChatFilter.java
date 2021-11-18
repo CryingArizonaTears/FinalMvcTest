@@ -7,6 +7,7 @@ import lombok.Setter;
 @Setter
 public class ChatFilter {
     private Long id;
-    private Long firstUser;
-    private Long secondUser;
+    private String name;
+    private String text;
+    private Long userId;
 }

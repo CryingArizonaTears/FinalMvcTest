@@ -42,7 +42,6 @@ public class ChatAndMessageService implements IChatAndMessageService {
     @Override
     public void createChat(ChatDto chatDto) {
 
-
         Chat dtoChat = modelMapper.map(chatDto, Chat.class);
         chatDao.save(dtoChat);
     }

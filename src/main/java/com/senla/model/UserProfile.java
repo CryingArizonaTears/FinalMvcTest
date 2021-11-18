@@ -11,7 +11,6 @@ import java.util.List;
 
 @Getter
 @Setter
-@ToString
 @Entity
 @Table(name = "userProfile")
 public class UserProfile extends AbstractModel {
@@ -23,13 +22,13 @@ public class UserProfile extends AbstractModel {
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "users")
     @LazyCollection(LazyCollectionOption.FALSE)
-    @JoinTable(
-            name = "usersChats",
-            joinColumns = @JoinColumn(name = "userId"),
-            inverseJoinColumns = @JoinColumn(name = "chatId")
-    )
+//    @JoinTable(
+//            name = "usersChats",
+//            joinColumns = @JoinColumn(name = "userId"),
+//            inverseJoinColumns = @JoinColumn(name = "chatId")
+//    )
     private List<Chat> chats;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userProfile")
     @LazyCollection(LazyCollectionOption.FALSE)
@@ -42,4 +41,14 @@ public class UserProfile extends AbstractModel {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userLoginId", nullable = false)
     private UserLogin userLogin;
+
+    @Override
+    public String toString() {
+        return "UserProfile{" +
+                "id=" + id +
+                ", fullName='" + fullName + '\'' +
+                ", role=" + role +
+                ", avgRating=" + avgRating +
+                '}';
+    }
 }

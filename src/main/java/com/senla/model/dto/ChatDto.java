@@ -10,16 +10,17 @@ import java.util.List;
 public class ChatDto {
 
     private Long id;
-    private UserProfileDto firstUser;
-    private UserProfileDto secondUser;
+    private String name;
+    private List<UserProfileDto> users;
+//    private UserProfileDto firstUser;
+//    private UserProfileDto secondUser;
     private List<MessageDto> messages;
 
     @Override
     public String toString() {
         return "ChatDto{" +
                 "id=" + id +
-                ", firstUser=" + firstUser.getId() +
-                ", secondUser=" + secondUser.getId() +
+                ", users=" + users +
                 ", messages=" + messages +
                 '}';
     }

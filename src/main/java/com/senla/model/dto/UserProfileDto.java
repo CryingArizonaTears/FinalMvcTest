@@ -4,14 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.senla.model.Role;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.util.List;
 
 
 @Setter
 @Getter
-@ToString
 public class UserProfileDto {
 
     private Long id;
@@ -26,4 +24,14 @@ public class UserProfileDto {
     private Double avgRating;
     @JsonIgnore
     private UserLoginDto userLogin;
+
+    @Override
+    public String toString() {
+        return "UserProfileDto{" +
+                "id=" + id +
+                ", fullName='" + fullName + '\'' +
+                ", role=" + role +
+                ", avgRating=" + avgRating +
+                '}';
+    }
 }

@@ -16,12 +16,15 @@ public class Chat extends AbstractModel {
 
     @Column(name = "id", nullable = false)
     private Long id;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "firstUserId", nullable = false)
-    private UserProfile firstUser;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "secondUserId", nullable = false)
-    private UserProfile secondUser;
+    private String name;
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JoinTable(
+            name = "usersChats",
+            joinColumns = @JoinColumn(name = "chatId"),
+            inverseJoinColumns = @JoinColumn(name = "userId")
+    )
+    private List<UserProfile> users;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "chat")
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Message> messages;
@@ -30,8 +33,8 @@ public class Chat extends AbstractModel {
     public String toString() {
         return "Chat{" +
                 "id=" + id +
-                ", FirstUser=" + firstUser.getId() +
-                ", SecondUser=" + secondUser.getId() +
+                ", name='" + name + '\'' +
+                ", users=" + users +
                 ", messages=" + messages +
                 '}';
     }
