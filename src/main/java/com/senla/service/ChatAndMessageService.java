@@ -2,58 +2,54 @@ package com.senla.service;
 
 import com.senla.api.dao.IChatDao;
 import com.senla.api.dao.IMessageDao;
-import com.senla.api.dao.IUserProfileDao;
 import com.senla.api.service.IChatAndMessageService;
 import com.senla.model.Chat;
 import com.senla.model.Message;
-import com.senla.model.UserProfile;
+import com.senla.model.dto.AdDto;
+import com.senla.model.dto.ChatDto;
+import com.senla.model.dto.MessageDto;
+import com.senla.model.dto.filter.ChatFilter;
+import com.senla.modelMapperMethods.ModelMapperMapList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.List;
 
 @Transactional
 @Service
 public class ChatAndMessageService implements IChatAndMessageService {
     @Autowired
-    private IUserProfileDao userProfileDao;
-    @Autowired
     private IChatDao chatDao;
     @Autowired
     private IMessageDao messageDao;
+    @Autowired
+    private ModelMapperMapList modelMapper;
 
 
     @Override
-    public void sendMessage(Long chatId, Long userId, String text) {
+    public void sendMessage(Long chatId, MessageDto messageDto) {
 
         Chat chat = new Chat();
         chat.setId(chatId);
-        Message message = new Message();
+        Message message = modelMapper.map(messageDto, Message.class);
         message.setChat(chat);
-        UserProfile userProfile = new UserProfile();
-        userProfile.setId(userId);
-        message.setSender(userProfile);
-        message.setText(text);
         message.setCreationDate(LocalDate.now());
         messageDao.save(message);
     }
 
     @Override
-    public Chat createChat(Long firstUser, Long secondUser) {
+    public void createChat(ChatDto chatDto) {
 
-        Chat chat = new Chat();
-        UserProfile firstUserProfile = userProfileDao.get(firstUser);
-        UserProfile secondUserProfile = userProfileDao.get(secondUser);
-        chat.setFirstUser(firstUserProfile);
-        chat.setSecondUser(secondUserProfile);
-        chat.setMessages(new ArrayList<>());
-        chatDao.save(chat);
-        firstUserProfile.getChats().add(chat);
-        secondUserProfile.getChats().add(chat);
-        userProfileDao.update(firstUserProfile);
-        userProfileDao.update(secondUserProfile);
-        return chat;
+
+        Chat dtoChat = modelMapper.map(chatDto, Chat.class);
+        chatDao.save(dtoChat);
+    }
+
+
+    @Override
+    public List<ChatDto> getByFilter(ChatFilter chatFilter) {
+        return modelMapper.mapList(chatDao.getByFilter(chatFilter), ChatDto.class);
     }
 }

@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Transactional
@@ -23,6 +22,7 @@ public class AdService implements IAdService {
     @Autowired
     private ModelMapperMapList modelMapper;
 
+    @Override
     public List<AdDto> getByFilter(AdFilter adFilter) {
         return modelMapper.mapList(adDao.getByFilter(adFilter), AdDto.class);
     }
