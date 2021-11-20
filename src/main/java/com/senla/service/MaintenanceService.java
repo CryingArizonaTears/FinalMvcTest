@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.Entity;
 import java.time.LocalDate;
+import java.util.List;
 
 @Transactional
 @Service
@@ -32,8 +34,8 @@ public class MaintenanceService implements IMaintenanceService {
     }
 
     @Override
-    public void getByFilter(MaintenanceFilter maintenanceFilter) {
-
+    public List<MaintenanceDto> getByFilter(MaintenanceFilter maintenanceFilter) {
+        return modelMapper.mapList(maintenanceDao.getByFilter(maintenanceFilter), MaintenanceDto.class);
     }
 
     @Override

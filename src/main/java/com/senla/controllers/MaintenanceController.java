@@ -1,5 +1,6 @@
 package com.senla.controllers;
 
+import com.senla.api.service.IMaintenanceService;
 import com.senla.model.dto.AdDto;
 import com.senla.model.dto.MaintenanceDto;
 import com.senla.model.dto.filter.MaintenanceFilter;
@@ -15,7 +16,7 @@ import java.util.List;
 public class MaintenanceController {
 
     @Autowired
-    MaintenanceService maintenanceService;
+    private IMaintenanceService maintenanceService;
 
     @PostMapping
     public ResponseEntity<Void> createMaintenance(@RequestBody MaintenanceDto maintenanceDto) {
@@ -25,6 +26,6 @@ public class MaintenanceController {
 
     @GetMapping
     public ResponseEntity<List<MaintenanceDto>> getMaintenancesByFilter (MaintenanceFilter maintenanceFilter){
-        return ResponseEntity.ok();
+        return ResponseEntity.ok(maintenanceService.getByFilter(maintenanceFilter));
     }
 }

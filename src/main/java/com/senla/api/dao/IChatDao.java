@@ -10,7 +10,7 @@ public interface IChatDao {
 
     List<Chat> getAll();
 
-    List<Chat> getByFilter(Entity entity);
+    List<Chat> getByFilter(Object entity);
 
     Chat get(Long id);
 

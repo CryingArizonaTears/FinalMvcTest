@@ -1,8 +1,8 @@
 package com.senla.controllers;
 
+import com.senla.api.service.ICategoryService;
 import com.senla.model.dto.CategoryDto;
 import com.senla.model.dto.filter.CategoryFilter;
-import com.senla.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +14,7 @@ import java.util.List;
 public class CategoryController {
 
     @Autowired
-    private CategoryService categoryService;
+    private ICategoryService categoryService;
 
     @GetMapping
     public ResponseEntity<List<CategoryDto>> getCategoriesByFilter(CategoryFilter categoryFilter) {

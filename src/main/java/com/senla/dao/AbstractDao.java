@@ -31,12 +31,12 @@ public abstract class AbstractDao<T extends AbstractModel> {
         return getCurrentSession().createQuery(all).getResultList();
     }
 
-    public List<T> getByFilter(Entity entity) {
+    public  List<T> getByFilter(Object entity) {
         CriteriaBuilder builder = getCurrentSession().getCriteriaBuilder();
         CriteriaQuery<T> query = builder.createQuery(getClazz());
         Root<T> root = query.from(getClazz());
         try {
-            getMethod().setAccessible(true);
+//            getMethod().setAccessible(true);
             Object qwe = getMethod().invoke(entity, builder, root);
             query.where((Predicate) qwe);
         } catch (IllegalAccessException | InvocationTargetException e) {

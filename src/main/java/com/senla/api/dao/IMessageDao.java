@@ -9,7 +9,7 @@ public interface IMessageDao {
 
     List<Message> getAll();
 
-    List<Message> getByFilter(Entity entity);
+    List<Message> getByFilter(Object entity);
 
     Message get(Long id);
 

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
+import java.lang.reflect.Method;
 import java.util.List;
 
 @Transactional
@@ -15,6 +16,11 @@ public class RatingDao extends AbstractDao<Rating> implements IRatingDao {
     @Override
     protected Class<Rating> getClazz() {
         return Rating.class;
+    }
+
+    @Override
+    protected Method getMethod() {
+        return null;
     }
 
     public List<Rating> filterByUserId(Long id) {

@@ -34,15 +34,15 @@ public class MaintenanceDao extends AbstractDao<Maintenance> implements IMainten
         return null;
     }
 
-    @Override
-    public List<Maintenance> getByFilter(MaintenanceFilter maintenanceFilter) {
-        CriteriaBuilder builder = getCurrentSession().getCriteriaBuilder();
-        CriteriaQuery<Maintenance> query = builder.createQuery(Maintenance.class);
-        Root<Maintenance> root = query.from(Maintenance.class);
-        query.where(maintenancePredicate(maintenanceFilter, builder, root));
-        CriteriaQuery<Maintenance> all = query.select(root);
-        return getCurrentSession().createQuery(all).getResultList();
-    }
+//    @Override
+//    public List<Maintenance> getByFilter(MaintenanceFilter maintenanceFilter) {
+//        CriteriaBuilder builder = getCurrentSession().getCriteriaBuilder();
+//        CriteriaQuery<Maintenance> query = builder.createQuery(Maintenance.class);
+//        Root<Maintenance> root = query.from(Maintenance.class);
+//        query.where(maintenancePredicate(maintenanceFilter, builder, root));
+//        CriteriaQuery<Maintenance> all = query.select(root);
+//        return getCurrentSession().createQuery(all).getResultList();
+//    }
 
     private Predicate[] maintenancePredicate(MaintenanceFilter maintenanceFilter, CriteriaBuilder builder, Root<Maintenance> root) {
         List<Predicate> predicates = new ArrayList<>();

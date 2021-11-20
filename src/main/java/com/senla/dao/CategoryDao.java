@@ -10,6 +10,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,14 +23,23 @@ public class CategoryDao extends AbstractDao<Category> implements ICategoryDao {
     }
 
     @Override
-    public List<Category> getByFilter(CategoryFilter categoryFilter) {
-        CriteriaBuilder builder = getCurrentSession().getCriteriaBuilder();
-        CriteriaQuery<Category> query = builder.createQuery(Category.class);
-        Root<Category> root = query.from(Category.class);
-        query.where(categoryPredicate(categoryFilter, builder, root));
-        CriteriaQuery<Category> all = query.select(root);
-        return getCurrentSession().createQuery(all).getResultList();
+    protected Method getMethod() {
+        try {
+            return CategoryDao.class.getMethod("categoryPredicate", CategoryFilter.class, CriteriaBuilder.class, Root.class);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
+    //    @Override
+//    public List<Category> getByFilter(CategoryFilter categoryFilter) {
+//        CriteriaBuilder builder = getCurrentSession().getCriteriaBuilder();
+//        CriteriaQuery<Category> query = builder.createQuery(Category.class);
+//        Root<Category> root = query.from(Category.class);
+//        query.where(categoryPredicate(categoryFilter, builder, root));
+//        CriteriaQuery<Category> all = query.select(root);
+//        return getCurrentSession().createQuery(all).getResultList();
+//    }
 
     private Predicate[] categoryPredicate(CategoryFilter categoryFilter, CriteriaBuilder builder, Root<Category> root) {
         List<Predicate> predicates = new ArrayList<>();

@@ -3,13 +3,14 @@ package com.senla.api.dao;
 import com.senla.model.Category;
 import com.senla.model.dto.filter.CategoryFilter;
 
+import javax.persistence.Entity;
 import java.util.List;
 
 public interface ICategoryDao {
 
     List<Category> getAll();
 
-    List<Category> getByFilter(CategoryFilter categoryFilter);
+    List<Category> getByFilter(Object entity);
 
     Category get(Long id);
 
