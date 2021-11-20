@@ -6,7 +6,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
-import java.lang.reflect.Method;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.List;
 
 @Transactional
@@ -19,7 +21,7 @@ public class RatingDao extends AbstractDao<Rating> implements IRatingDao {
     }
 
     @Override
-    protected Method getMethod() {
+    protected Predicate[] getPredicates(Object object, CriteriaBuilder criteriaBuilder, Root root) {
         return null;
     }
 

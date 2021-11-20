@@ -4,7 +4,9 @@ import com.senla.api.dao.IUserLoginDao;
 import com.senla.model.UserLogin;
 import org.springframework.stereotype.Repository;
 
-import java.lang.reflect.Method;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 @Repository
 public class UserLoginDao extends AbstractDao<UserLogin> implements IUserLoginDao {
@@ -15,7 +17,7 @@ public class UserLoginDao extends AbstractDao<UserLogin> implements IUserLoginDa
     }
 
     @Override
-    protected Method getMethod() {
+    protected Predicate[] getPredicates(Object object, CriteriaBuilder criteriaBuilder, Root root) {
         return null;
     }
 }

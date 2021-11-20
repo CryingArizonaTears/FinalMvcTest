@@ -4,7 +4,9 @@ import com.senla.api.dao.ICommentDao;
 import com.senla.model.Comment;
 import org.springframework.stereotype.Repository;
 
-import java.lang.reflect.Method;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 @Repository
 public class CommentDao extends AbstractDao<Comment> implements ICommentDao {
@@ -15,7 +17,7 @@ public class CommentDao extends AbstractDao<Comment> implements ICommentDao {
     }
 
     @Override
-    protected Method getMethod() {
+    protected Predicate[] getPredicates(Object object, CriteriaBuilder criteriaBuilder, Root root) {
         return null;
     }
 }

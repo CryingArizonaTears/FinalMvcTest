@@ -11,7 +11,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +24,7 @@ public class AdDao extends AbstractDao<Ad> implements IAdDao {
     }
 
     @Override
-    protected Method getMethod() {
+    protected Predicate[] getPredicates(Object object, CriteriaBuilder criteriaBuilder, Root root) {
         return null;
     }
 

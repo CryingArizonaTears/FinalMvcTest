@@ -1,9 +1,7 @@
 package com.senla.api.dao;
 
 import com.senla.model.Chat;
-import com.senla.model.dto.filter.ChatFilter;
 
-import javax.persistence.Entity;
 import java.util.List;
 
 public interface IChatDao {

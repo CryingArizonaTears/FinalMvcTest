@@ -9,6 +9,7 @@ public class MaintenanceFilter {
 
     private String name;
     private String description;
-    private Double price;
+    private Double priceFrom;
+    private Double priceTo;
     private Integer plusDays;
 }

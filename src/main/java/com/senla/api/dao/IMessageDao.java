@@ -2,7 +2,6 @@ package com.senla.api.dao;
 
 import com.senla.model.Message;
 
-import javax.persistence.Entity;
 import java.util.List;
 
 public interface IMessageDao {
