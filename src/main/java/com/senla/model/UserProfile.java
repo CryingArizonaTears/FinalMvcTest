@@ -22,13 +22,13 @@ public class UserProfile extends AbstractModel {
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany(mappedBy = "users",cascade = CascadeType.MERGE)
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Chat> chats;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userProfile")
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "userProfile")
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Ad> ads;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "receiver")
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "receiver")
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Rating> ratings;
     @Column(name = "avgRating", nullable = false)

@@ -14,10 +14,10 @@ public class Comment extends AbstractModel {
 
     @Column(name = "id", nullable = false)
     private Long id;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "adId ", nullable = false)
     private Ad ad;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "userId", nullable = false)
     private UserProfile userProfile;
     @Column(name = "commentText", nullable = false)

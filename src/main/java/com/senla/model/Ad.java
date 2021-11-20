@@ -24,17 +24,17 @@ public class Ad extends AbstractModel {
     private AdStatus status;
     @Column(name = "premiumUntilDate")
     private LocalDate premiumUntilDate;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "categoryId", nullable = false)
     private Category category;
     @Column(name = "adDescription", nullable = false)
     private String description;
     @Column(name = "price", nullable = false)
     private Double price;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "userId", nullable = false)
     private UserProfile userProfile;
-    @OneToMany(mappedBy = "ad", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "ad", cascade = CascadeType.MERGE)
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Comment> comments;
     @ManyToMany(cascade = CascadeType.ALL)
