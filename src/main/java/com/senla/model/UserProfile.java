@@ -24,11 +24,6 @@ public class UserProfile extends AbstractModel {
     private Role role;
     @ManyToMany(mappedBy = "users")
     @LazyCollection(LazyCollectionOption.FALSE)
-//    @JoinTable(
-//            name = "usersChats",
-//            joinColumns = @JoinColumn(name = "userId"),
-//            inverseJoinColumns = @JoinColumn(name = "chatId")
-//    )
     private List<Chat> chats;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userProfile")
     @LazyCollection(LazyCollectionOption.FALSE)

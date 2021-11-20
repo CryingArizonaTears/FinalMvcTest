@@ -4,6 +4,7 @@ import com.senla.api.dao.IAdDao;
 import com.senla.api.dao.IUserLoginDao;
 import com.senla.api.dao.IUserProfileDao;
 import com.senla.api.service.IUserService;
+import com.senla.model.AdStatus;
 import com.senla.model.Role;
 import com.senla.model.UserLogin;
 import com.senla.model.UserProfile;
@@ -17,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Transactional
@@ -71,7 +71,10 @@ public class UserService implements IUserService {
 
 
     @Override
-    public List<AdDto> salesHistory(AdFilter adFilter) {
+    public List<AdDto> salesHistory(Long id) {
+        AdFilter adFilter = new AdFilter();
+        adFilter.setUserId(id);
+        adFilter.setStatus(AdStatus.CLOSED);
         return modelMapper.mapList(adDao.getByFilter(adFilter), AdDto.class);
     }
 }

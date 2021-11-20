@@ -1,12 +1,8 @@
 package com.senla.controllers;
 
+import com.senla.api.service.IRatingService;
 import com.senla.api.service.IUserService;
-import com.senla.model.AdStatus;
-import com.senla.model.dto.AdDto;
-import com.senla.model.dto.UserDto;
-import com.senla.model.dto.UserLoginDto;
-import com.senla.model.dto.UserProfileDto;
-import com.senla.model.dto.filter.AdFilter;
+import com.senla.model.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +16,8 @@ public class UserController {
 
     @Autowired
     private IUserService userService;
+    @Autowired
+    private IRatingService ratingService;
 
 
     @GetMapping("/{id}")
@@ -47,9 +45,12 @@ public class UserController {
 
     @GetMapping("/{id}/salesHistory")
     public ResponseEntity<List<AdDto>> getUserSalesById(@PathVariable Long id) {
-        AdFilter adFilter = new AdFilter();
-        adFilter.setUserId(id);
-        adFilter.setStatus(AdStatus.CLOSED);
-        return ResponseEntity.ok(userService.salesHistory(adFilter));
+        return ResponseEntity.ok(userService.salesHistory(id));
+    }
+
+    @PostMapping("/mark")
+    public ResponseEntity<Void> addMarkToUser(@RequestBody RatingDto ratingDto) {
+        ratingService.addMarkToUser(ratingDto);
+        return ResponseEntity.noContent().build();
     }
 }

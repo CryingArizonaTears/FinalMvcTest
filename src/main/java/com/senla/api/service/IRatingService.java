@@ -1,6 +1,8 @@
 package com.senla.api.service;
 
+import com.senla.model.dto.RatingDto;
+
 public interface IRatingService {
 
-    void addMarkToUser(Long receiverId, Long senderId, Integer mark);
+    void addMarkToUser(RatingDto ratingDto);
 }

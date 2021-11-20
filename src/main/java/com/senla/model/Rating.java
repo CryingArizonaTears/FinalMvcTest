@@ -19,7 +19,7 @@ public class Rating extends AbstractModel {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userSenderId", nullable = false)
     private UserProfile sender;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     @JoinColumn(name = "userReceiverId", nullable = false)
     private UserProfile receiver;
     @Column(name = "creationDate", nullable = false)

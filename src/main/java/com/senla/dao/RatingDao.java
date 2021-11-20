@@ -2,13 +2,14 @@ package com.senla.dao;
 
 import com.senla.api.dao.IRatingDao;
 import com.senla.model.Rating;
+import com.senla.model.dto.filter.RatingFilter;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.util.ArrayList;
 import java.util.List;
 
 @Transactional
@@ -22,12 +23,19 @@ public class RatingDao extends AbstractDao<Rating> implements IRatingDao {
 
     @Override
     protected Predicate[] getPredicates(Object object, CriteriaBuilder criteriaBuilder, Root root) {
-        return null;
+        return ratingPredicate((RatingFilter) object, criteriaBuilder, root);
     }
 
-    public List<Rating> filterByUserId(Long id) {
 
-        Query query = getCurrentSession().createQuery("from Rating r where r.receiver = '" + id + "'");
-        return (List<Rating>) query.getResultList();
+    private Predicate[] ratingPredicate(RatingFilter ratingFilter, CriteriaBuilder builder, Root<Rating> root) {
+        List<Predicate> predicates = new ArrayList<>();
+
+        if (ratingFilter.getReceiver() != null) {
+            predicates.add(builder.equal(root.get("receiver"), ratingFilter.getReceiver()));
+        }
+        if (ratingFilter.getSender() != null) {
+            predicates.add(builder.equal(root.get("sender"), ratingFilter.getSender()));
+        }
+        return predicates.toArray(new Predicate[]{});
     }
 }
