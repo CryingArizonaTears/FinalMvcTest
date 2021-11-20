@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.Entity;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -39,10 +38,10 @@ public class MaintenanceService implements IMaintenanceService {
     }
 
     @Override
-    public void addMaintenanceToAd(Long adId, Long maintenanceId) {
+    public void addMaintenanceToAd(Long adId, MaintenanceDto maintenanceDto) {
 
         Ad ad = adDao.get(adId);
-        Maintenance maintenance = maintenanceDao.get(maintenanceId);
+        Maintenance maintenance = modelMapper.map(maintenanceDto, Maintenance.class);
         ad.getMaintenances().add(maintenance);
         if (ad.getPremiumUntilDate() == null || ad.getPremiumUntilDate().isBefore(LocalDate.now())) {
             ad.setPremiumUntilDate(LocalDate.now().plusDays(maintenance.getPlusDays()));

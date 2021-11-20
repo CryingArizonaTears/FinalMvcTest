@@ -11,5 +11,5 @@ public interface IMaintenanceService {
 
     List<MaintenanceDto> getByFilter(MaintenanceFilter maintenanceFilter);
 
-    void addMaintenanceToAd(Long adId, Long maintenanceId);
+    void addMaintenanceToAd(Long adId, MaintenanceDto maintenanceDto);
 }

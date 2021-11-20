@@ -2,8 +2,10 @@ package com.senla.controllers;
 
 import com.senla.api.service.IAdService;
 import com.senla.api.service.ICommentService;
+import com.senla.api.service.IMaintenanceService;
 import com.senla.model.dto.AdDto;
 import com.senla.model.dto.CommentDto;
+import com.senla.model.dto.MaintenanceDto;
 import com.senla.model.dto.filter.AdFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,8 @@ public class AdController {
     private IAdService adService;
     @Autowired
     private ICommentService commentService;
+    @Autowired
+    private IMaintenanceService maintenanceService;
 
     @GetMapping()
     public ResponseEntity<List<AdDto>> getAdsByFilter(AdFilter filter) {
@@ -44,9 +48,16 @@ public class AdController {
     }
 
     @PostMapping("/{id}/comment")
-    public ResponseEntity<Void> createComment(@PathVariable Long id,
+    public ResponseEntity<Void> addComment(@PathVariable Long id,
                                               @RequestBody CommentDto commentDto) {
         commentService.createComment(id, commentDto);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/maintenance")
+    public ResponseEntity<Void> addMaintenance(@PathVariable Long id,
+                                               @RequestBody MaintenanceDto maintenanceDto){
+        maintenanceService.addMaintenanceToAd(id, maintenanceDto);
         return ResponseEntity.noContent().build();
     }
 }
