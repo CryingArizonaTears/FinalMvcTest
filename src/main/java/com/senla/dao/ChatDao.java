@@ -13,6 +13,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,14 +26,25 @@ public class ChatDao extends AbstractDao<Chat> implements IChatDao {
     }
 
     @Override
-    public List<Chat> getByFilter(ChatFilter chatFilter) {
-        CriteriaBuilder builder = getCurrentSession().getCriteriaBuilder();
-        CriteriaQuery<Chat> query = builder.createQuery(Chat.class);
-        Root<Chat> root = query.from(Chat.class);
-        query.where(chatsPredicate(chatFilter, builder, root));
-        CriteriaQuery<Chat> all = query.select(root);
-        return getCurrentSession().createQuery(all).getResultList();
+    protected Method getMethod() {
+        try {
+            return ChatDao.class.getMethod("chatsPredicate", ChatFilter.class, CriteriaBuilder.class, Root.class);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
+
+
+//    @Override
+//    public List<Chat> getByFilter(ChatFilter chatFilter) {
+//        CriteriaBuilder builder = getCurrentSession().getCriteriaBuilder();
+//        CriteriaQuery<Chat> query = builder.createQuery(Chat.class);
+//        Root<Chat> root = query.from(Chat.class);
+//        query.where(chatsPredicate(chatFilter, builder, root));
+//        CriteriaQuery<Chat> all = query.select(root);
+//        return getCurrentSession().createQuery(all).getResultList();
+//    }
 
     private Predicate[] chatsPredicate(ChatFilter chatFilter, CriteriaBuilder builder, Root<Chat> root) {
         List<Predicate> predicates = new ArrayList<>();
@@ -40,10 +52,10 @@ public class ChatDao extends AbstractDao<Chat> implements IChatDao {
         if (chatFilter.getId() != null) {
             predicates.add(builder.equal(root.get("id"), chatFilter.getId()));
         }
-        if (chatFilter.getName() != null) {
+        if (!ObjectUtils.isEmpty(chatFilter.getName())) {
             predicates.add(builder.like(root.get("name"), "%" + chatFilter.getName() + "%"));
         }
-        if (chatFilter.getText() != null) {
+        if (!ObjectUtils.isEmpty(chatFilter.getText())) {
             predicates.add(builder.like(root.join("messages").get("text"), "%" + chatFilter.getText() + "%"));
         }
         if (chatFilter.getUserId() != null) {

@@ -3,11 +3,14 @@ package com.senla.api.dao;
 import com.senla.model.Chat;
 import com.senla.model.dto.filter.ChatFilter;
 
+import javax.persistence.Entity;
 import java.util.List;
 
 public interface IChatDao {
 
     List<Chat> getAll();
+
+    List<Chat> getByFilter(Entity entity);
 
     Chat get(Long id);
 
@@ -16,6 +19,4 @@ public interface IChatDao {
     void save(Chat chat);
 
     void delete(Long id);
-
-    List<Chat> getByFilter(ChatFilter chatFilter);
 }

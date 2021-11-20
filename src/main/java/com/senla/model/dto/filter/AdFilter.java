@@ -1,5 +1,6 @@
 package com.senla.model.dto.filter;
 
+import com.senla.model.AdStatus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +11,7 @@ public class AdFilter {
     private String name;
     private String categoryName;
     private Long userId;
-    private String status;
+    private AdStatus status;
     private Double priceFrom;
     private Double priceTo;
     private String orderBy;

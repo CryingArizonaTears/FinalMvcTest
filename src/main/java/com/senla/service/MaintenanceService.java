@@ -5,6 +5,9 @@ import com.senla.api.dao.IMaintenanceDao;
 import com.senla.api.service.IMaintenanceService;
 import com.senla.model.Ad;
 import com.senla.model.Maintenance;
+import com.senla.model.dto.MaintenanceDto;
+import com.senla.model.dto.filter.MaintenanceFilter;
+import com.senla.modelMapperMethods.ModelMapperMapList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,18 +21,20 @@ public class MaintenanceService implements IMaintenanceService {
     private IMaintenanceDao maintenanceDao;
     @Autowired
     private IAdDao adDao;
+    @Autowired
+    private ModelMapperMapList modelMapper;
 
     @Override
-    public void createMaintenance(String name, String description, Double price, Integer plusDays) {
+    public void createMaintenance(MaintenanceDto maintenanceDto) {
 
-        Maintenance maintenance = new Maintenance();
-        maintenance.setName(name);
-        maintenance.setDescription(description);
-        maintenance.setPrice(price);
-        maintenance.setPlusDays(plusDays);
+        Maintenance maintenance = modelMapper.map(maintenanceDto, Maintenance.class);
         maintenanceDao.save(maintenance);
     }
 
+    @Override
+    public void getByFilter(MaintenanceFilter maintenanceFilter) {
+
+    }
 
     @Override
     public void addMaintenanceToAd(Long adId, Long maintenanceId) {

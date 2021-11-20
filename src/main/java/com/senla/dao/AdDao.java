@@ -2,7 +2,6 @@ package com.senla.dao;
 
 import com.senla.api.dao.IAdDao;
 import com.senla.model.Ad;
-import com.senla.model.AdStatus;
 import com.senla.model.dto.filter.AdFilter;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,7 +60,7 @@ public class AdDao extends AbstractDao<Ad> implements IAdDao {
             predicates.add(builder.lessThanOrEqualTo(root.get("price"), adFilter.getPriceTo()));
         }
         if (adFilter.getStatus() != null) {
-            predicates.add(builder.equal(root.get("status"), AdStatus.valueOf(adFilter.getStatus())));
+            predicates.add(builder.equal(root.get("status"), adFilter.getStatus()));
         }
         if (adFilter.getId() != null) {
             predicates.add(builder.equal(root.get("id"), adFilter.getId()));

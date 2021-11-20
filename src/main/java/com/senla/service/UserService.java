@@ -41,9 +41,6 @@ public class UserService implements IUserService {
         userProfile.setRole(Role.USER);
         userProfile.setAvgRating(0D);
         userProfile.setUserLogin(userLogin);
-        userProfile.setRatings(new ArrayList<>());
-        userProfile.setChats(new ArrayList<>());
-        userProfile.setAds(new ArrayList<>());
         userLoginDao.save(userLogin);
         userProfileDao.save(userProfile);
 

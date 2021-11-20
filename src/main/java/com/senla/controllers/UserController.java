@@ -1,7 +1,11 @@
 package com.senla.controllers;
 
 import com.senla.api.service.IUserService;
-import com.senla.model.dto.*;
+import com.senla.model.AdStatus;
+import com.senla.model.dto.AdDto;
+import com.senla.model.dto.UserDto;
+import com.senla.model.dto.UserLoginDto;
+import com.senla.model.dto.UserProfileDto;
 import com.senla.model.dto.filter.AdFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +49,7 @@ public class UserController {
     public ResponseEntity<List<AdDto>> getUserSalesById(@PathVariable Long id) {
         AdFilter adFilter = new AdFilter();
         adFilter.setUserId(id);
-        adFilter.setStatus("CLOSED");
+        adFilter.setStatus(AdStatus.CLOSED);
         return ResponseEntity.ok(userService.salesHistory(adFilter));
     }
 }
