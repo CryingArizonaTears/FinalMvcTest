@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class CategoryDao extends AbstractDao<Category> implements ICategoryDao {
+public class CategoryDao extends AbstractFilterDao<Category, CategoryFilter> implements ICategoryDao {
 
     @Override
     protected Class<Category> getClazz() {
@@ -21,11 +21,7 @@ public class CategoryDao extends AbstractDao<Category> implements ICategoryDao {
     }
 
     @Override
-    protected Predicate[] getPredicates(Object object, CriteriaBuilder criteriaBuilder, Root root) {
-        return categoryPredicate((CategoryFilter) object, criteriaBuilder, root);
-    }
-
-    private Predicate[] categoryPredicate(CategoryFilter categoryFilter, CriteriaBuilder builder, Root<Category> root) {
+    protected Predicate[] getPredicates(CategoryFilter categoryFilter, CriteriaBuilder builder, Root root) {
         List<Predicate> predicates = new ArrayList<>();
 
         if (!ObjectUtils.isEmpty(categoryFilter.getName())) {

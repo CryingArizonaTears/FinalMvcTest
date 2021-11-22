@@ -1,5 +1,6 @@
 package com.senla.dao;
 
+import com.senla.api.dao.IAbstractDao;
 import com.senla.model.AbstractModel;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -8,12 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.List;
 
-public abstract class AbstractDao<T extends AbstractModel> {
-
+public abstract class AbstractDao<T extends AbstractModel> implements IAbstractDao<T> {
     @Autowired
     protected SessionFactory sessionFactory;
 
@@ -22,15 +21,6 @@ public abstract class AbstractDao<T extends AbstractModel> {
         CriteriaBuilder builder = getCurrentSession().getCriteriaBuilder();
         CriteriaQuery<T> query = builder.createQuery(getClazz());
         Root<T> root = query.from(getClazz());
-        CriteriaQuery<T> all = query.select(root);
-        return getCurrentSession().createQuery(all).getResultList();
-    }
-
-    public List<T> getByFilter(Object entity) {
-        CriteriaBuilder builder = getCurrentSession().getCriteriaBuilder();
-        CriteriaQuery<T> query = builder.createQuery(getClazz());
-        Root<T> root = query.from(getClazz());
-        query.where(getPredicates(entity, builder, root));
         CriteriaQuery<T> all = query.select(root);
         return getCurrentSession().createQuery(all).getResultList();
     }
@@ -57,12 +47,9 @@ public abstract class AbstractDao<T extends AbstractModel> {
         getCurrentSession().remove(bufEntity);
     }
 
-    protected abstract Predicate[] getPredicates(Object object, CriteriaBuilder criteriaBuilder, Root root);
-
     protected abstract Class<T> getClazz();
 
     protected Session getCurrentSession() {
         return sessionFactory.getCurrentSession();
     }
-
 }

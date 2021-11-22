@@ -1,20 +1,8 @@
 package com.senla.api.dao;
 
 import com.senla.model.Rating;
+import com.senla.model.dto.filter.RatingFilter;
 
-import java.util.List;
+public interface IRatingDao extends IAbstractFilterDao<Rating, RatingFilter> {
 
-public interface IRatingDao {
-
-    List<Rating> getAll();
-
-    List<Rating> getByFilter(Object entity);
-
-    Rating get(Long id);
-
-    Rating update(Rating rating);
-
-    void save(Rating rating);
-
-    void delete(Long id);
 }

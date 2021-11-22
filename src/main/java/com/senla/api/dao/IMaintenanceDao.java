@@ -1,20 +1,8 @@
 package com.senla.api.dao;
 
 import com.senla.model.Maintenance;
+import com.senla.model.dto.filter.MaintenanceFilter;
 
-import java.util.List;
+public interface IMaintenanceDao extends IAbstractFilterDao<Maintenance, MaintenanceFilter> {
 
-public interface IMaintenanceDao {
-
-    List<Maintenance> getAll();
-
-    List<Maintenance> getByFilter(Object entity);
-
-    Maintenance get(Long id);
-
-    Maintenance update(Maintenance maintenance);
-
-    void save(Maintenance maintenance);
-
-    void delete(Long id);
 }

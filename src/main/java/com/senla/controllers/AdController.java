@@ -49,14 +49,14 @@ public class AdController {
 
     @PostMapping("/{id}/comment")
     public ResponseEntity<Void> addComment(@PathVariable Long id,
-                                              @RequestBody CommentDto commentDto) {
+                                           @RequestBody CommentDto commentDto) {
         commentService.createComment(id, commentDto);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{id}/maintenance")
     public ResponseEntity<Void> addMaintenance(@PathVariable Long id,
-                                               @RequestBody MaintenanceDto maintenanceDto){
+                                               @RequestBody MaintenanceDto maintenanceDto) {
         maintenanceService.addMaintenanceToAd(id, maintenanceDto);
         return ResponseEntity.noContent().build();
     }

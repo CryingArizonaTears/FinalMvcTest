@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class ChatDao extends AbstractDao<Chat> implements IChatDao {
+public class ChatDao extends AbstractFilterDao<Chat, ChatFilter> implements IChatDao {
 
     @Override
     protected Class<Chat> getClazz() {
@@ -21,13 +21,8 @@ public class ChatDao extends AbstractDao<Chat> implements IChatDao {
     }
 
     @Override
-    protected Predicate[] getPredicates(Object object, CriteriaBuilder criteriaBuilder, Root root) {
+    protected Predicate[] getPredicates(ChatFilter chatFilter, CriteriaBuilder builder, Root<Chat> root) {
 
-        return chatsPredicate((ChatFilter) object, criteriaBuilder, root);
-    }
-
-
-    private Predicate[] chatsPredicate(ChatFilter chatFilter, CriteriaBuilder builder, Root<Chat> root) {
         List<Predicate> predicates = new ArrayList<>();
 
         if (chatFilter.getId() != null) {

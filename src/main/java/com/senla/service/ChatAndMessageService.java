@@ -5,7 +5,6 @@ import com.senla.api.dao.IMessageDao;
 import com.senla.api.service.IChatAndMessageService;
 import com.senla.model.Chat;
 import com.senla.model.Message;
-import com.senla.model.dto.AdDto;
 import com.senla.model.dto.ChatDto;
 import com.senla.model.dto.MessageDto;
 import com.senla.model.dto.filter.ChatFilter;
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.Entity;
 import java.time.LocalDate;
 import java.util.List;
 

@@ -6,7 +6,6 @@ import com.senla.model.Ad;
 import com.senla.model.Comment;
 import com.senla.model.dto.CommentDto;
 import com.senla.modelMapperMethods.ModelMapperMapList;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

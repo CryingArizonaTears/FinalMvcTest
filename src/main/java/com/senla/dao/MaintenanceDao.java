@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class MaintenanceDao extends AbstractDao<Maintenance> implements IMaintenanceDao {
+public class MaintenanceDao extends AbstractFilterDao<Maintenance, MaintenanceFilter> implements IMaintenanceDao {
 
     @Override
     protected Class<Maintenance> getClazz() {
@@ -21,12 +21,8 @@ public class MaintenanceDao extends AbstractDao<Maintenance> implements IMainten
     }
 
     @Override
-    protected Predicate[] getPredicates(Object object, CriteriaBuilder criteriaBuilder, Root root) {
+    protected Predicate[] getPredicates(MaintenanceFilter maintenanceFilter, CriteriaBuilder builder, Root<Maintenance> root) {
 
-        return maintenancePredicate((MaintenanceFilter) object, criteriaBuilder, root);
-    }
-
-    private Predicate[] maintenancePredicate(MaintenanceFilter maintenanceFilter, CriteriaBuilder builder, Root<Maintenance> root) {
         List<Predicate> predicates = new ArrayList<>();
 
         if (!ObjectUtils.isEmpty(maintenanceFilter.getName())) {

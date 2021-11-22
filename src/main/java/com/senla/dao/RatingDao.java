@@ -14,7 +14,7 @@ import java.util.List;
 
 @Transactional
 @Repository
-public class RatingDao extends AbstractDao<Rating> implements IRatingDao {
+public class RatingDao extends AbstractFilterDao<Rating, RatingFilter> implements IRatingDao {
 
     @Override
     protected Class<Rating> getClazz() {
@@ -22,12 +22,7 @@ public class RatingDao extends AbstractDao<Rating> implements IRatingDao {
     }
 
     @Override
-    protected Predicate[] getPredicates(Object object, CriteriaBuilder criteriaBuilder, Root root) {
-        return ratingPredicate((RatingFilter) object, criteriaBuilder, root);
-    }
-
-
-    private Predicate[] ratingPredicate(RatingFilter ratingFilter, CriteriaBuilder builder, Root<Rating> root) {
+    protected Predicate[] getPredicates(RatingFilter ratingFilter, CriteriaBuilder builder, Root<Rating> root) {
         List<Predicate> predicates = new ArrayList<>();
 
         if (ratingFilter.getReceiver() != null) {

@@ -1,6 +1,5 @@
 package com.senla.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.senla.model.AdStatus;
 import lombok.Getter;
 import lombok.Setter;

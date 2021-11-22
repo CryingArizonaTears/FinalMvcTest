@@ -4,7 +4,6 @@ import com.senla.api.dao.IUserProfileDao;
 import com.senla.api.service.*;
 import com.senla.config.SpringConfig;
 import com.senla.controllers.UserController;
-import com.senla.model.dto.UserLoginDto;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 

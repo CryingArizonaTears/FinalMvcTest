@@ -12,7 +12,7 @@ public class ChatDto {
     private Long id;
     private String name;
     private List<UserProfileDto> users;
-//    private UserProfileDto firstUser;
+    //    private UserProfileDto firstUser;
 //    private UserProfileDto secondUser;
     private List<MessageDto> messages;
 

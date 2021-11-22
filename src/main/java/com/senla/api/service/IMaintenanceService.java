@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface IMaintenanceService {
 
-    void createMaintenance(MaintenanceDto maintenanceDto) ;
+    void createMaintenance(MaintenanceDto maintenanceDto);
 
     List<MaintenanceDto> getByFilter(MaintenanceFilter maintenanceFilter);
 
