@@ -32,8 +32,8 @@ public class UserController {
     }
 
     @PutMapping("/login")
-    public ResponseEntity<Void> updateUserLogin(@RequestBody UserLoginDto userLoginDto) {
-        userService.editLogin(userLoginDto);
+    public ResponseEntity<Void> updateUserLogin(@RequestBody UserCredentialsDto userCredentialsDto) {
+        userService.editLogin(userCredentialsDto);
         return ResponseEntity.noContent().build();
     }
 

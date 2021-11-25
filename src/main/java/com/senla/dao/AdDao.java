@@ -68,9 +68,9 @@ public class AdDao extends AbstractFilterDao<Ad, AdFilter> implements IAdDao {
             Session session = getCurrentSession();
             Query query1 = session.createQuery("select a from Ad a join a.userProfile u where a.status = 'OPEN' and a.premiumUntilDate >= '" + LocalDate.now() + "' order by avgRating desc");
             Query query2 = session.createQuery("select a from Ad a join a.userProfile u where a.status = 'OPEN' and (a.premiumUntilDate < '" + LocalDate.now() + "' or a.premiumUntilDate = null) order by avgRating desc");
-//            Query query3 = session.createQuery("select a, (a.premiumUntilDate is null or a.premiumUntilDate < '" + LocalDate.now() + "') as s from Ad a join a.userProfile p where a.status = 'OPEN' order by s, avgRating desc");
-            List list1 = query1.getResultList();
-            List list2 = query2.getResultList();
+//            Query query3 = session.createQuery("select a from Ad a join a.userProfile p where a.status = 'OPEN' order by (a.premiumUntilDate is null or a.premiumUntilDate < '" + LocalDate.now() + "'), avgRating desc");
+            List<Ad> list1 = query1.getResultList();
+            List<Ad> list2 = query2.getResultList();
             list1.addAll(list2);
             return list1;
         }

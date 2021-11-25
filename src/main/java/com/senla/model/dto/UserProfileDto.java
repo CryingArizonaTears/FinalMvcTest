@@ -23,7 +23,7 @@ public class UserProfileDto {
     private List<RatingDto> ratings;
     private Double avgRating;
     @JsonIgnore
-    private UserLoginDto userLogin;
+    private UserCredentialsDto userLogin;
 
     @Override
     public String toString() {

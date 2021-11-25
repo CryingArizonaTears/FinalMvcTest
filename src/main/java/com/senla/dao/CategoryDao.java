@@ -21,7 +21,7 @@ public class CategoryDao extends AbstractFilterDao<Category, CategoryFilter> imp
     }
 
     @Override
-    protected Predicate[] getPredicates(CategoryFilter categoryFilter, CriteriaBuilder builder, Root root) {
+    protected Predicate[] getPredicates(CategoryFilter categoryFilter, CriteriaBuilder builder, Root<Category> root) {
         List<Predicate> predicates = new ArrayList<>();
 
         if (!ObjectUtils.isEmpty(categoryFilter.getName())) {
