@@ -5,9 +5,12 @@ import com.senla.api.dao.IMaintenanceDao;
 import com.senla.api.service.IMaintenanceService;
 import com.senla.model.Ad;
 import com.senla.model.Maintenance;
+import com.senla.model.Role;
+import com.senla.model.UserProfile;
 import com.senla.model.dto.MaintenanceDto;
 import com.senla.model.dto.filter.MaintenanceFilter;
 import com.senla.modelMapperMethods.ModelMapperMapList;
+import com.senla.security.AuthenticationGetUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +27,8 @@ public class MaintenanceService implements IMaintenanceService {
     private IAdDao adDao;
     @Autowired
     private ModelMapperMapList modelMapper;
+    @Autowired
+    private AuthenticationGetUser authenticationGetUser;
 
     @Override
     public void createMaintenance(MaintenanceDto maintenanceDto) {
@@ -39,7 +44,7 @@ public class MaintenanceService implements IMaintenanceService {
 
     @Override
     public void addMaintenanceToAd(Long adId, MaintenanceDto maintenanceDto) {
-
+        UserProfile userProfile = authenticationGetUser.getUserProfileByAuthentication();
         Ad ad = adDao.get(adId);
         Maintenance maintenance = modelMapper.map(maintenanceDto, Maintenance.class);
         ad.getMaintenances().add(maintenance);
@@ -48,7 +53,17 @@ public class MaintenanceService implements IMaintenanceService {
         } else {
             ad.setPremiumUntilDate(ad.getPremiumUntilDate().plusDays(maintenance.getPlusDays()));
         }
-        adDao.update(ad);
+        if (userProfile.getRole().equals(Role.ROLE_USER)) {
+            if (userProfile.getAds().stream().anyMatch(ad1 -> ad1.getId().equals(adId))) {
+                adDao.update(ad);
+            } else {
+                throw new SecurityException("Вы не можете редактировать чужие штуки");
+            }
+        }
+        if (userProfile.getRole().equals(Role.ROLE_ADMIN)) {
+            adDao.update(ad);
+        }
+
     }
 
 }

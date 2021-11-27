@@ -5,7 +5,9 @@ import com.senla.model.dto.MaintenanceDto;
 import com.senla.model.dto.filter.MaintenanceFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -15,12 +17,6 @@ public class MaintenanceController {
 
     @Autowired
     private IMaintenanceService maintenanceService;
-
-    @PostMapping
-    public ResponseEntity<Void> createMaintenance(@RequestBody MaintenanceDto maintenanceDto) {
-        maintenanceService.createMaintenance(maintenanceDto);
-        return ResponseEntity.noContent().build();
-    }
 
     @GetMapping
     public ResponseEntity<List<MaintenanceDto>> getMaintenancesByFilter(MaintenanceFilter maintenanceFilter) {

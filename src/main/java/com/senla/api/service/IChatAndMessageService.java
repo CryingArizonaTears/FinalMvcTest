@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface IChatAndMessageService {
 
-    void sendMessage(Long chatId, MessageDto messageDto);
+    void sendMessage(MessageDto messageDto);
 
     void createChat(ChatDto chatDto);
 

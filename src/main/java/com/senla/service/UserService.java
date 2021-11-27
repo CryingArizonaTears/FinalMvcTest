@@ -9,12 +9,13 @@ import com.senla.model.Role;
 import com.senla.model.UserLogin;
 import com.senla.model.UserProfile;
 import com.senla.model.dto.AdDto;
-import com.senla.model.dto.UserDto;
 import com.senla.model.dto.UserCredentialsDto;
+import com.senla.model.dto.UserDto;
 import com.senla.model.dto.UserProfileDto;
 import com.senla.model.dto.filter.AdFilter;
 import com.senla.model.dto.filter.UserFilter;
 import com.senla.modelMapperMethods.ModelMapperMapList;
+import com.senla.security.AuthenticationGetUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,8 @@ public class UserService implements IUserService {
     private ModelMapperMapList modelMapper;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private AuthenticationGetUser authenticationGetUser;
 
 
     @Override
@@ -55,26 +58,47 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void editLogin(UserCredentialsDto userCredentialsDto) {
+    public void editPassword(UserCredentialsDto userCredentialsDto) {
 
+        UserProfile userProfile = authenticationGetUser.getUserProfileByAuthentication();
         UserLogin userLogin = modelMapper.map(userCredentialsDto, UserLogin.class);
-        userLoginDao.update(userLogin);
+        if (userProfile.getRole().equals(Role.ROLE_USER)) {
+            if (userLogin.getId().equals(userProfile.getId())) {
+                userLoginDao.update(userLogin);
+            } else {
+                throw new SecurityException("Вы не можете редактировать чужие штуки");
+            }
+        }
+        if (userProfile.getRole().equals(Role.ROLE_ADMIN)) {
+            userLoginDao.update(userLogin);
+        }
     }
+
 
     @Override
     public void editProfile(UserProfileDto userProfileDto) {
 
+        UserProfile userProfileAuth = authenticationGetUser.getUserProfileByAuthentication();
         UserProfile dtoUserProfile = modelMapper.map(userProfileDto, UserProfile.class);
         UserProfile userProfile = userDao.get(dtoUserProfile.getId());
         userProfile.setFullName(dtoUserProfile.getFullName());
-        userDao.update(userProfile);
-
+        if (userProfileAuth.getRole().equals(Role.ROLE_USER)) {
+            if (userProfileAuth.getId().equals(userProfile.getId())) {
+                userDao.update(userProfile);
+            } else {
+                throw new SecurityException("Вы не можете редактировать чужие штуки");
+            }
+        }
+        if (userProfile.getRole().equals(Role.ROLE_ADMIN)) {
+            userDao.update(userProfile);
+        }
     }
 
     @Override
     public UserProfileDto getById(Long id) {
-        UserProfile userProfile = userDao.get(id);
-        return modelMapper.map(userProfile, UserProfileDto.class);
+        UserFilter userFilter = new UserFilter();
+        userFilter.setId(id);
+        return modelMapper.map(userDao.getByFilter(userFilter).stream().findFirst().orElse(null), UserProfileDto.class);
     }
 
     @Override
@@ -82,11 +106,9 @@ public class UserService implements IUserService {
         UserFilter userFilter = new UserFilter();
         userFilter.setUsername(username);
 
-        UserProfile userProfile = userDao.get(userLoginDao.getByFilter(userFilter).stream()
+        return userDao.getByFilter(userFilter).stream()
                 .findFirst()
-                .get()
-                .getId());
-        return userProfile;
+                .orElse(null);
     }
 
     @Override
@@ -98,7 +120,7 @@ public class UserService implements IUserService {
                 return userLogin;
             }
         }
-        return null;
+        throw new NullPointerException();
     }
 
     @Override

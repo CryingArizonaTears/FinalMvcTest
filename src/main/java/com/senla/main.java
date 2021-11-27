@@ -24,7 +24,7 @@ public class main {
 
 
         IChatAndMessageService chatAndMessageService = context.getBean(IChatAndMessageService.class);
-//        userProfileService.editProfile(1L, "editTest", "12345", "editTest");
+//        userProfileService.editProfileAsAdmin(1L, "editTest", "12345", "editTest");
 //        userProfileService.registration("test1", "1234", "testik1");
 //        userProfileService.registration("test2", "1234", "testik2");
 //        userProfileService.registration("test3", "1234", "testik3");

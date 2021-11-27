@@ -2,7 +2,10 @@ package com.senla.controllers;
 
 import com.senla.api.service.IRatingService;
 import com.senla.api.service.IUserService;
-import com.senla.model.dto.*;
+import com.senla.model.dto.AdDto;
+import com.senla.model.dto.RatingDto;
+import com.senla.model.dto.UserCredentialsDto;
+import com.senla.model.dto.UserProfileDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,15 +28,9 @@ public class UserController {
         return ResponseEntity.ok(userService.getById(id));
     }
 
-    @PostMapping("/registration")
-    public ResponseEntity<Void> createUser(@RequestBody UserDto userDto) {
-        userService.registration(userDto);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PutMapping("/login")
+    @PutMapping("/password")
     public ResponseEntity<Void> updateUserLogin(@RequestBody UserCredentialsDto userCredentialsDto) {
-        userService.editLogin(userCredentialsDto);
+        userService.editPassword(userCredentialsDto);
         return ResponseEntity.noContent().build();
     }
 

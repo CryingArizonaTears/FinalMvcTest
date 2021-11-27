@@ -7,5 +7,6 @@ import lombok.Setter;
 @Setter
 public class UserFilter {
 
+    private Long id;
     private String username;
 }

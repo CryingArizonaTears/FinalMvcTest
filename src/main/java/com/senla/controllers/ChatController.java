@@ -17,17 +17,16 @@ public class ChatController {
     @Autowired
     private IChatAndMessageService chatAndMessageService;
 
-    @PostMapping()
+    @PostMapping("/message")
     public ResponseEntity<Void> createChat(@RequestBody ChatDto chatDto) {
         chatAndMessageService.createChat(chatDto);
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{chatId}")
-    public ResponseEntity<Void> createMessage(@PathVariable Long chatId,
-                                              @RequestBody MessageDto messageDto) {
+    @PostMapping()
+    public ResponseEntity<Void> createMessage(@RequestBody MessageDto messageDto) {
 
-        chatAndMessageService.sendMessage(chatId, messageDto);
+        chatAndMessageService.sendMessage(messageDto);
         return ResponseEntity.noContent().build();
     }
 

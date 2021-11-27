@@ -8,6 +8,4 @@ import lombok.Setter;
 public class ChatFilter {
     private Long id;
     private String name;
-    private String text;
-    private Long userId;
 }

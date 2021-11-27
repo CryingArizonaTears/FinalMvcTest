@@ -1,7 +1,9 @@
 package com.senla.controllers;
 
 import com.senla.api.service.ICategoryService;
+import com.senla.api.service.IMaintenanceService;
 import com.senla.model.dto.CategoryDto;
+import com.senla.model.dto.MaintenanceDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,10 +17,18 @@ public class AdminControllers {
 
     @Autowired
     private ICategoryService categoryService;
+    @Autowired
+    private IMaintenanceService maintenanceService;
 
-    @PostMapping("/categories/create")
+    @PostMapping("/category")
     public ResponseEntity<Void> createCategory(@RequestBody CategoryDto categoryDto) {
         categoryService.createCategory(categoryDto);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/maintenance")
+    public ResponseEntity<Void> createMaintenance(@RequestBody MaintenanceDto maintenanceDto) {
+        maintenanceService.createMaintenance(maintenanceDto);
         return ResponseEntity.noContent().build();
     }
 
