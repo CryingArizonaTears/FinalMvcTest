@@ -22,10 +22,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private TokenProvider tokenProvider;
-    @Autowired
-    private IUserService userService;
-    @Autowired
     private JwtFilter jwtFilter;
 
     protected void configure(HttpSecurity htpp) {
@@ -35,39 +31,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .and()
                     .authorizeRequests()
-                    .antMatchers("/admin/*").hasRole("ADMIN")
-                    .antMatchers("/user/*").hasAnyRole("USER", "ADMIN")
-                    .antMatchers("/registration", "/auth").permitAll()
+                    .antMatchers("/admin/**").hasRole("ADMIN")
+                    .antMatchers("/ads/**", "/chats/**", "/users/**").hasAnyRole("USER", "ADMIN")
+                    .antMatchers("/registration", "/auth", "/get/**").permitAll()
                     .and()
                     .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-//    @Override
-//    protected void configure(HttpSecurity http) {
-//        try {
-//            http.csrf().disable()
-//                    .authorizeRequests()
-//                    .antMatchers("/login").permitAll()
-//                    .antMatchers("signup").permitAll()
-//                    .antMatchers("/admin/**").hasRole("ADMIN")
-//                    .anyRequest().authenticated()
-//                    .and().httpBasic();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder builder) {
-//        try {
-//            builder.userDetailsService(userService).passwordEncoder(passwordEncoder());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

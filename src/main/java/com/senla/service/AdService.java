@@ -33,10 +33,13 @@ public class AdService implements IAdService {
 
     @Override
     public List<AdDto> getByFilter(AdFilter adFilter) {
-        UserProfile user = authenticationGetUser.getUserProfileByAuthentication();
-        if (user.getRole().equals(Role.ROLE_USER)) {
-            adFilter.setStatus(AdStatus.OPEN);
+        if (authenticationGetUser.getUserProfileByAuthentication() != null) {
+            UserProfile user = authenticationGetUser.getUserProfileByAuthentication();
+            if (user.getRole().equals(Role.ROLE_ADMIN)) {
+                return modelMapper.mapList(adDao.getByFilter(adFilter), AdDto.class);
+            }
         }
+        adFilter.setStatus(AdStatus.OPEN);
         return modelMapper.mapList(adDao.getByFilter(adFilter), AdDto.class);
     }
 
