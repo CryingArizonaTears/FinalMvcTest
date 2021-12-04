@@ -2,6 +2,7 @@ package com.senla.controllers;
 
 import com.senla.api.service.IUserService;
 import com.senla.model.UserLogin;
+import com.senla.model.dto.UserCredentialsDto;
 import com.senla.model.dto.UserDto;
 import com.senla.security.filter.TokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +20,14 @@ public class AuthController {
     private TokenProvider tokenProvider;
 
     @PostMapping("/registration")
-    public ResponseEntity<Void> registration(@RequestBody UserDto userDto) {
+    public ResponseEntity<Void> register(@RequestBody UserDto userDto) {
         userService.registration(userDto);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/auth")
-    public ResponseEntity<String> authorization(@RequestBody UserDto userDto) {
-        UserLogin userLogin = userService.getByUsernameAndPassword(userDto);
+    public ResponseEntity<String> logIn(@RequestBody UserDto userDto) {
+        UserCredentialsDto userLogin = userService.getByUsernameAndPassword(userDto);
         String token = tokenProvider.createToken(userLogin.getUsername());
         return ResponseEntity.ok(token);
     }

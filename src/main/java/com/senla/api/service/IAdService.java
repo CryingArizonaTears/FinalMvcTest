@@ -6,9 +6,7 @@ import com.senla.model.dto.filter.AdFilter;
 import java.util.List;
 
 public interface IAdService {
-
-//    AdDto getById(Long id);
-
+    
     List<AdDto> getByFilter(AdFilter adFilter);
 
     void createAd(AdDto adDto);

@@ -3,14 +3,14 @@ package com.senla.service;
 import com.senla.api.dao.IAdDao;
 import com.senla.api.dao.IMaintenanceDao;
 import com.senla.api.service.IMaintenanceService;
+import com.senla.api.service.IUserService;
 import com.senla.model.Ad;
 import com.senla.model.Maintenance;
 import com.senla.model.Role;
 import com.senla.model.UserProfile;
 import com.senla.model.dto.MaintenanceDto;
 import com.senla.model.dto.filter.MaintenanceFilter;
-import com.senla.modelMapperMethods.ModelMapperMapList;
-import com.senla.security.AuthenticationGetUser;
+import com.senla.modelMapperMethods.ExtendedModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,9 +26,9 @@ public class MaintenanceService implements IMaintenanceService {
     @Autowired
     private IAdDao adDao;
     @Autowired
-    private ModelMapperMapList modelMapper;
+    private ExtendedModelMapper modelMapper;
     @Autowired
-    private AuthenticationGetUser authenticationGetUser;
+    private IUserService userService;
 
     @Override
     public void createMaintenance(MaintenanceDto maintenanceDto) {
@@ -44,7 +44,7 @@ public class MaintenanceService implements IMaintenanceService {
 
     @Override
     public void addMaintenanceToAd(Long adId, MaintenanceDto maintenanceDto) {
-        UserProfile userProfile = authenticationGetUser.getUserProfileByAuthentication();
+        UserProfile userProfile = modelMapper.map(userService.getCurrentUserProfile(), UserProfile.class);
         Ad ad = adDao.get(adId);
         Maintenance maintenance = modelMapper.map(maintenanceDto, Maintenance.class);
         ad.getMaintenances().add(maintenance);

@@ -1,13 +1,16 @@
 package com.senla.security;
 
-import com.senla.model.UserProfile;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.Collections;
 
+@Getter
+@Setter
+@ToString
 public class CustomUserDetails implements UserDetails {
 
 
@@ -15,27 +18,10 @@ public class CustomUserDetails implements UserDetails {
     private String password;
     private Collection<? extends GrantedAuthority> grantedAuthorities;
 
-    public static CustomUserDetails fromUserToCustomUserDetails(UserProfile userProfile) {
-        CustomUserDetails customUserDetails = new CustomUserDetails();
-        customUserDetails.username = userProfile.getUserLogin().getUsername();
-        customUserDetails.password = userProfile.getUserLogin().getPassword();
-        customUserDetails.grantedAuthorities = Collections.singletonList(new SimpleGrantedAuthority(userProfile.getRole().getName()));
-        return customUserDetails;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return grantedAuthorities;
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
     }
 
     @Override

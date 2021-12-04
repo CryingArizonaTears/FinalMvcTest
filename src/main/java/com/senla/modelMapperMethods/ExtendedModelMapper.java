@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class ModelMapperMapList extends ModelMapper {
+public class ExtendedModelMapper extends ModelMapper {
 
     public <S, T> List<T> mapList(List<S> source, Class<T> targetClass) {
         return source

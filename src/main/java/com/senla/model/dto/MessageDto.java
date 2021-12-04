@@ -1,6 +1,7 @@
 package com.senla.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +12,7 @@ import java.time.LocalDate;
 public class MessageDto {
 
     private Long id;
-    @JsonIgnore
+    @JsonBackReference
     private ChatDto chat;
     private UserProfileDto sender;
     private String text;
@@ -21,8 +22,8 @@ public class MessageDto {
     public String toString() {
         return "MessageDto{" +
                 "id=" + id +
-                ", chat=" + chat.getId() +
-                ", sender=" + sender.getId() +
+                ", chat=" + chat +
+                ", sender=" + sender +
                 ", text='" + text + '\'' +
                 ", date=" + date +
                 '}';

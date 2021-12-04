@@ -3,11 +3,12 @@ package com.senla.service;
 import com.senla.api.dao.IRatingDao;
 import com.senla.api.dao.IUserProfileDao;
 import com.senla.api.service.IRatingService;
+import com.senla.api.service.IUserService;
 import com.senla.model.Rating;
 import com.senla.model.UserProfile;
 import com.senla.model.dto.RatingDto;
 import com.senla.model.dto.filter.RatingFilter;
-import com.senla.modelMapperMethods.ModelMapperMapList;
+import com.senla.modelMapperMethods.ExtendedModelMapper;
 import com.senla.security.AuthenticationGetUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,13 +26,13 @@ public class RatingService implements IRatingService {
     @Autowired
     private IRatingDao ratingDao;
     @Autowired
-    private ModelMapperMapList modelMapper;
+    private ExtendedModelMapper modelMapper;
     @Autowired
-    private AuthenticationGetUser authenticationGetUser;
+    private IUserService userService;
 
     @Override
     public void addMarkToUser(RatingDto ratingDto) {
-        UserProfile sender = authenticationGetUser.getUserProfileByAuthentication();
+        UserProfile sender = modelMapper.map(userService.getCurrentUserProfile(), UserProfile.class);
         Rating rating = modelMapper.map(ratingDto, Rating.class);
         rating.setSender(sender);
         if (rating.getSender().equals(rating.getReceiver())) {

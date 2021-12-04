@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -31,9 +32,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .and()
                     .authorizeRequests()
+                    .antMatchers("/categories", "/maintenances", "/registration", "/auth").permitAll()
+                    .antMatchers(HttpMethod.GET, "/ads").permitAll()
                     .antMatchers("/admin/**").hasRole("ADMIN")
                     .antMatchers("/ads/**", "/chats/**", "/users/**").hasAnyRole("USER", "ADMIN")
-                    .antMatchers("/registration", "/auth", "/get/**").permitAll()
                     .and()
                     .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         } catch (Exception e) {

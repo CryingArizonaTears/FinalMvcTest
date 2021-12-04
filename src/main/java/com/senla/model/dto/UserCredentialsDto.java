@@ -10,7 +10,7 @@ import lombok.ToString;
 public class UserCredentialsDto {
 
     private Long id;
-    //    private String username;
+    private String username;
     private String password;
 
 }

@@ -1,7 +1,5 @@
 package com.senla.api.service;
 
-import com.senla.model.UserLogin;
-import com.senla.model.UserProfile;
 import com.senla.model.dto.AdDto;
 import com.senla.model.dto.UserCredentialsDto;
 import com.senla.model.dto.UserDto;
@@ -19,9 +17,11 @@ public interface IUserService {
 
     UserProfileDto getById(Long id);
 
-    UserProfile getByUsername(String username);
+    UserProfileDto getByUsername(String username);
 
-    UserLogin getByUsernameAndPassword(UserDto userDto);
+    UserCredentialsDto getByUsernameAndPassword(UserDto userDto);
+
+    UserProfileDto getCurrentUserProfile();
 
     List<AdDto> salesHistory(Long id);
 }
