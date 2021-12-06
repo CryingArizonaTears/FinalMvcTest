@@ -9,5 +9,4 @@ public class UserFilter {
 
     private Long id;
     private String username;
-    private String password;
 }
