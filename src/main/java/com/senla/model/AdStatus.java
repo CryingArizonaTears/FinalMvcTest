@@ -8,5 +8,5 @@ public enum AdStatus {
         this.name = name;
     }
 
-    private String name;
+    private final String name;
 }

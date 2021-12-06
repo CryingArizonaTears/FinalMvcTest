@@ -9,7 +9,6 @@ import com.senla.model.UserProfile;
 import com.senla.model.dto.RatingDto;
 import com.senla.model.dto.filter.RatingFilter;
 import com.senla.modelMapperMethods.ExtendedModelMapper;
-import com.senla.security.AuthenticationGetUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

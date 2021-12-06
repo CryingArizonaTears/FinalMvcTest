@@ -1,7 +1,6 @@
 package com.senla.service;
 
 import com.senla.api.dao.IAdDao;
-import com.senla.api.dao.IUserProfileDao;
 import com.senla.api.service.IAdService;
 import com.senla.api.service.IUserService;
 import com.senla.model.*;
@@ -29,7 +28,7 @@ public class AdService implements IAdService {
 
     @Override
     public List<AdDto> getByFilter(AdFilter adFilter) {
-        if (!SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser")) {
+        if (!checkAnonymousUser()) {
             UserProfile user = modelMapper.map(userService.getCurrentUserProfile(), UserProfile.class);
             if (user.getRole().equals(Role.ROLE_ADMIN)) {
                 return modelMapper.mapList(adDao.getByFilter(adFilter), AdDto.class);
@@ -120,6 +119,10 @@ public class AdService implements IAdService {
         if (adDto.getUserProfile() != null) {
             ad.setUserProfile(modelMapper.map(adDto.getUserProfile(), UserProfile.class));
         }
+    }
+
+    private boolean checkAnonymousUser() {
+        return SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser");
     }
 
 }

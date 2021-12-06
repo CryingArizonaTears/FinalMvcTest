@@ -19,7 +19,7 @@ public interface IUserService {
 
     UserProfileDto getByUsername(String username);
 
-    UserCredentialsDto getByUsernameAndPassword(UserDto userDto);
+    UserCredentialsDto getEncryptedUserCredentials(UserDto userDto);
 
     UserProfileDto getCurrentUserProfile();
 

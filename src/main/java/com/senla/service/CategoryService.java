@@ -22,8 +22,8 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public void createCategory(CategoryDto categoryDto) {
-            Category category = modelMapper.map(categoryDto, Category.class);
-            categoryDao.save(category);
+        Category category = modelMapper.map(categoryDto, Category.class);
+        categoryDao.save(category);
     }
 
     @Override

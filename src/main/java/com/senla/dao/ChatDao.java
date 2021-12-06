@@ -32,7 +32,7 @@ public class ChatDao extends AbstractFilterDao<Chat, ChatFilter> implements ICha
             predicates.add(builder.like(root.get("name"), "%" + chatFilter.getName() + "%"));
         }
         if (chatFilter.getUserProfileId() != null) {
-            predicates.add(builder.equal(root.join("users").get("id"),  chatFilter.getUserProfileId()));
+            predicates.add(builder.equal(root.join("users").get("id"), chatFilter.getUserProfileId()));
         }
         return predicates.toArray(new Predicate[]{});
     }

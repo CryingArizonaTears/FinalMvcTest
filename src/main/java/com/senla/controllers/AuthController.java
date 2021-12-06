@@ -1,7 +1,6 @@
 package com.senla.controllers;
 
 import com.senla.api.service.IUserService;
-import com.senla.model.UserLogin;
 import com.senla.model.dto.UserCredentialsDto;
 import com.senla.model.dto.UserDto;
 import com.senla.security.filter.TokenProvider;
@@ -27,7 +26,7 @@ public class AuthController {
 
     @PostMapping("/auth")
     public ResponseEntity<String> logIn(@RequestBody UserDto userDto) {
-        UserCredentialsDto userLogin = userService.getByUsernameAndPassword(userDto);
+        UserCredentialsDto userLogin = userService.getEncryptedUserCredentials(userDto);
         String token = tokenProvider.createToken(userLogin.getUsername());
         return ResponseEntity.ok(token);
     }

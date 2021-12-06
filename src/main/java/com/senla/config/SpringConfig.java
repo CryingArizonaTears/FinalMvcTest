@@ -23,7 +23,7 @@ public class SpringConfig {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource());
         sessionFactory.setPackagesToScan(
-                new String[]{"com.senla.model"});
+                "com.senla.model");
         sessionFactory.setHibernateProperties(hibernateProperties());
 
         return sessionFactory;

@@ -27,6 +27,9 @@ public class UserLoginDao extends AbstractFilterDao<UserLogin, UserFilter> imple
         if (!ObjectUtils.isEmpty(userFilter.getUsername())) {
             predicates.add(builder.equal(root.get("username"), userFilter.getUsername()));
         }
+        if (!ObjectUtils.isEmpty(userFilter.getPassword())) {
+            predicates.add(builder.equal(root.get("password"), userFilter.getPassword()));
+        }
         return predicates.toArray(new Predicate[]{});
     }
 }

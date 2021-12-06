@@ -104,33 +104,28 @@ public class UserService implements IUserService {
     public UserProfileDto getById(Long id) {
         UserFilter userFilter = new UserFilter();
         userFilter.setId(id);
-        return modelMapper.map(userDao.getByFilter(userFilter).stream().findFirst().orElse(null), UserProfileDto.class);
+        return modelMapper.map(userDao.getByFilter(userFilter).stream().findFirst().orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден")), UserProfileDto.class);
     }
 
     @Override
     public UserProfileDto getByUsername(String username) {
         UserFilter userFilter = new UserFilter();
         userFilter.setUsername(username);
-        UserProfile userProfile = userDao.getByFilter(userFilter).stream()
+        return userDao.getByFilter(userFilter).stream()
                 .findFirst()
-                .orElse(null);
-        if (userProfile != null) {
-            return modelMapper.map(userProfile, UserProfileDto.class);
-        } else {
-            throw new UsernameNotFoundException("Пользователь не найден");
-        }
+                .map(userProfile1 -> modelMapper.map(userProfile1, UserProfileDto.class))
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
     }
 
     @Override
-    public UserCredentialsDto getByUsernameAndPassword(UserDto userDto) {
-        UserCredentialsDto userLogin1 = modelMapper.map(userDto, UserCredentialsDto.class);
-        UserCredentialsDto userLogin2 = getByUsername(userLogin1.getUsername()).getUserLogin();
-        if (!ObjectUtils.isEmpty(userLogin2)) {
-            if (passwordEncoder.matches(userLogin1.getPassword(), userLogin2.getPassword())) {
-                return userLogin2;
+    public UserCredentialsDto getEncryptedUserCredentials(UserDto userDto) {
+        UserCredentialsDto userCredentialsByUsername = getByUsername(userDto.getUsername()).getUserLogin();
+        if (!ObjectUtils.isEmpty(userCredentialsByUsername)) {
+            if (passwordEncoder.matches(userDto.getPassword(), userCredentialsByUsername.getPassword())) {
+                return userCredentialsByUsername;
             }
         }
-        throw new NullPointerException();
+        throw new SecurityException("Неправильный логин или пароль");
     }
 
     @Override
