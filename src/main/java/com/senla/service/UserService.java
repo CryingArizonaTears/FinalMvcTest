@@ -102,24 +102,22 @@ public class UserService implements IUserService {
 
     @Override
     public UserProfileDto getById(Long id) {
-        UserFilter userFilter = new UserFilter();
-        userFilter.setId(id);
-        return modelMapper.map(userDao.getByFilter(userFilter).stream().findFirst().orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден")), UserProfileDto.class);
+        return modelMapper.map(userDao.get(id), UserProfileDto.class);
     }
 
     @Override
-    public UserProfileDto getByUsername(String username) {
+    public UserProfileDto getUserProfileDtoByUsername(String username) {
         UserFilter userFilter = new UserFilter();
         userFilter.setUsername(username);
         return userDao.getByFilter(userFilter).stream()
                 .findFirst()
-                .map(userProfile1 -> modelMapper.map(userProfile1, UserProfileDto.class))
+                .map(userProfile -> modelMapper.map(userProfile, UserProfileDto.class))
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
     }
 
     @Override
     public UserCredentialsDto getEncryptedUserCredentials(UserDto userDto) {
-        UserCredentialsDto userCredentialsByUsername = getByUsername(userDto.getUsername()).getUserLogin();
+        UserCredentialsDto userCredentialsByUsername = getUserProfileDtoByUsername(userDto.getUsername()).getUserLogin();
         if (!ObjectUtils.isEmpty(userCredentialsByUsername)) {
             if (passwordEncoder.matches(userDto.getPassword(), userCredentialsByUsername.getPassword())) {
                 return userCredentialsByUsername;
@@ -132,7 +130,7 @@ public class UserService implements IUserService {
     public UserProfileDto getCurrentUserProfile() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
-        return getByUsername(currentPrincipalName);
+        return getUserProfileDtoByUsername(currentPrincipalName);
     }
 
     @Override
