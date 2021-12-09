@@ -106,7 +106,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserProfileDto getUserProfileDtoByUsername(String username) {
+    public UserProfileDto getUserProfileByUsername(String username) {
         UserFilter userFilter = new UserFilter();
         userFilter.setUsername(username);
         return userDao.getByFilter(userFilter).stream()
@@ -117,7 +117,7 @@ public class UserService implements IUserService {
 
     @Override
     public UserCredentialsDto getEncryptedUserCredentials(UserDto userDto) {
-        UserCredentialsDto userCredentialsByUsername = getUserProfileDtoByUsername(userDto.getUsername()).getUserLogin();
+        UserCredentialsDto userCredentialsByUsername = getUserProfileByUsername(userDto.getUsername()).getUserLogin();
         if (!ObjectUtils.isEmpty(userCredentialsByUsername)) {
             if (passwordEncoder.matches(userDto.getPassword(), userCredentialsByUsername.getPassword())) {
                 return userCredentialsByUsername;
@@ -130,7 +130,7 @@ public class UserService implements IUserService {
     public UserProfileDto getCurrentUserProfile() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
-        return getUserProfileDtoByUsername(currentPrincipalName);
+        return getUserProfileByUsername(currentPrincipalName);
     }
 
     @Override

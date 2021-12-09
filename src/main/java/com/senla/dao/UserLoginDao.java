@@ -2,6 +2,7 @@ package com.senla.dao;
 
 import com.senla.api.dao.IUserLoginDao;
 import com.senla.model.UserLogin;
+import com.senla.model.UserLogin_;
 import com.senla.model.dto.filter.UserFilter;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
@@ -25,7 +26,7 @@ public class UserLoginDao extends AbstractFilterDao<UserLogin, UserFilter> imple
         List<Predicate> predicates = new ArrayList<>();
 
         if (!ObjectUtils.isEmpty(userFilter.getUsername())) {
-            predicates.add(builder.equal(root.get("username"), userFilter.getUsername()));
+            predicates.add(builder.equal(root.get(UserLogin_.USERNAME), userFilter.getUsername()));
         }
         return predicates.toArray(new Predicate[]{});
     }

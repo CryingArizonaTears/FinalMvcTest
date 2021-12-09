@@ -1,7 +1,9 @@
 package com.senla.dao;
 
 import com.senla.api.dao.IUserProfileDao;
+import com.senla.model.UserLogin_;
 import com.senla.model.UserProfile;
+import com.senla.model.UserProfile_;
 import com.senla.model.dto.filter.UserFilter;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
@@ -25,10 +27,10 @@ public class UserProfileDao extends AbstractFilterDao<UserProfile, UserFilter> i
         List<Predicate> predicates = new ArrayList<>();
 
         if (userFilter.getId() != null) {
-            predicates.add(builder.equal(root.get("id"), userFilter.getId()));
+            predicates.add(builder.equal(root.get(UserProfile_.ID), userFilter.getId()));
         }
         if (!ObjectUtils.isEmpty(userFilter.getUsername())) {
-            predicates.add(builder.equal(root.join("userLogin").get("username"), userFilter.getUsername()));
+            predicates.add(builder.equal(root.get(UserLogin_.USERNAME), userFilter.getUsername()));
         }
         return predicates.toArray(new Predicate[]{});
     }

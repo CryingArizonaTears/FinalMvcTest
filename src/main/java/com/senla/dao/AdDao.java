@@ -2,7 +2,9 @@ package com.senla.dao;
 
 import com.senla.api.dao.IAdDao;
 import com.senla.model.Ad;
-import com.senla.model.AdStatus;
+import com.senla.model.Ad_;
+import com.senla.model.Category_;
+import com.senla.model.UserProfile_;
 import com.senla.model.dto.filter.AdFilter;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
@@ -50,25 +52,9 @@ public class AdDao extends AbstractFilterDao<Ad, AdFilter> implements IAdDao {
             CriteriaQuery<Ad> all = query.select(root);
             return getCurrentSession().createQuery(all).getResultList();
         } else {
-//            query.where(currentAdsPredicateFirst(builder, root));
-//            query.orderBy(builder.desc(root.join("userProfile").get("avgRating")));
-//            CriteriaQuery<Ad> all1 = query.select(root);
-//            List<Ad> list1 = getCurrentSession().createQuery(all1).getResultList();
-//
-//            CriteriaBuilder builder2 = getCurrentSession().getCriteriaBuilder();
-//            CriteriaQuery<Ad> query2 = builder2.createQuery(Ad.class);
-//            Root<Ad> root2 = query2.from(Ad.class);
-//            query2.where(currentAdsPredicateSecond(builder2, root2));
-//            query2.orderBy(builder2.desc(root2.join("userProfile").get("avgRating")));
-//            CriteriaQuery<Ad> all2 = query2.select(root2);
-//            List<Ad> list2 = getCurrentSession().createQuery(all2).getResultList();
-//
-//            list1.addAll(list2);
-//            return list1;
             Session session = getCurrentSession();
             Query query1 = session.createQuery("select a from Ad a join a.userProfile u where a.status = 'OPEN' and a.premiumUntilDate >= '" + LocalDate.now() + "' order by avgRating desc");
             Query query2 = session.createQuery("select a from Ad a join a.userProfile u where a.status = 'OPEN' and (a.premiumUntilDate < '" + LocalDate.now() + "' or a.premiumUntilDate = null) order by avgRating desc");
-//            Query query3 = session.createQuery("select a from Ad a join a.userProfile p where a.status = 'OPEN' order by (a.premiumUntilDate is null or a.premiumUntilDate < '" + LocalDate.now() + "'), avgRating desc");
             List<Ad> list1 = query1.getResultList();
             List<Ad> list2 = query2.getResultList();
             list1.addAll(list2);
@@ -79,42 +65,26 @@ public class AdDao extends AbstractFilterDao<Ad, AdFilter> implements IAdDao {
     private Predicate[] adsPredicate(AdFilter adFilter, CriteriaBuilder builder, Root<Ad> root) {
         List<Predicate> predicates = new ArrayList<>();
         if (!ObjectUtils.isEmpty(adFilter.getName())) {
-            predicates.add(builder.like(root.get("name"), "%" + adFilter.getName() + "%"));
+            predicates.add(builder.like(root.get(Ad_.NAME), "%" + adFilter.getName() + "%"));
         }
         if (!ObjectUtils.isEmpty(adFilter.getCategoryName())) {
-            predicates.add(builder.like(root.join("category").get("name"), "%" + adFilter.getCategoryName() + "%"));
+            predicates.add(builder.like(root.get(Category_.NAME), "%" + adFilter.getCategoryName() + "%"));
         }
         if (adFilter.getUserId() != null) {
-            predicates.add(builder.equal(root.join("userProfile").get("id"), adFilter.getUserId()));
+            predicates.add(builder.equal(root.get(UserProfile_.ID), adFilter.getUserId()));
         }
         if (adFilter.getPriceFrom() != null) {
-            predicates.add(builder.greaterThanOrEqualTo(root.get("price"), adFilter.getPriceFrom()));
+            predicates.add(builder.greaterThanOrEqualTo(root.get(Ad_.PRICE), adFilter.getPriceFrom()));
         }
         if (adFilter.getPriceTo() != null) {
-            predicates.add(builder.lessThanOrEqualTo(root.get("price"), adFilter.getPriceTo()));
+            predicates.add(builder.lessThanOrEqualTo(root.get(Ad_.PRICE), adFilter.getPriceTo()));
         }
         if (adFilter.getStatus() != null) {
-            predicates.add(builder.equal(root.get("status"), adFilter.getStatus()));
+            predicates.add(builder.equal(root.get(Ad_.STATUS), adFilter.getStatus()));
         }
         if (adFilter.getId() != null) {
-            predicates.add(builder.equal(root.get("id"), adFilter.getId()));
+            predicates.add(builder.equal(root.get(Ad_.ID), adFilter.getId()));
         }
-        return predicates.toArray(new Predicate[]{});
-    }
-
-    private Predicate[] currentAdsPredicateFirst(CriteriaBuilder builder, Root<Ad> root) {
-        List<Predicate> predicates = new ArrayList<>();
-        predicates.add(builder.equal(root.get("status"), AdStatus.OPEN));
-        predicates.add(builder.greaterThanOrEqualTo(root.get("premiumUntilDate"), LocalDate.now()));
-        return predicates.toArray(new Predicate[]{});
-    }
-
-
-    private Predicate[] currentAdsPredicateSecond(CriteriaBuilder builder, Root<Ad> root) {
-        List<Predicate> predicates = new ArrayList<>();
-        predicates.add(builder.equal(root.get("status"), AdStatus.OPEN));
-        predicates.add(builder.lessThan(root.get("premiumUntilDate"), LocalDate.now()));
-        predicates.add(builder.equal(root.get("premiumUntilDate"), null));
         return predicates.toArray(new Predicate[]{});
     }
 
