@@ -17,7 +17,7 @@ public interface IUserService {
 
     UserProfileDto getById(Long id);
 
-    UserProfileDto getUserProfileDtoByUsername(String username);
+    UserProfileDto getUserProfileByUsername(String username);
 
     UserCredentialsDto getEncryptedUserCredentials(UserDto userDto);
 

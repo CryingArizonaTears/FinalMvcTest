@@ -2,6 +2,7 @@ package com.senla.dao;
 
 import com.senla.api.dao.IRatingDao;
 import com.senla.model.Rating;
+import com.senla.model.Rating_;
 import com.senla.model.dto.filter.RatingFilter;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,10 +27,10 @@ public class RatingDao extends AbstractFilterDao<Rating, RatingFilter> implement
         List<Predicate> predicates = new ArrayList<>();
 
         if (ratingFilter.getReceiver() != null) {
-            predicates.add(builder.equal(root.get("receiver"), ratingFilter.getReceiver()));
+            predicates.add(builder.equal(root.get(Rating_.RECEIVER), ratingFilter.getReceiver()));
         }
         if (ratingFilter.getSender() != null) {
-            predicates.add(builder.equal(root.get("sender"), ratingFilter.getSender()));
+            predicates.add(builder.equal(root.get(Rating_.SENDER), ratingFilter.getSender()));
         }
         return predicates.toArray(new Predicate[]{});
     }

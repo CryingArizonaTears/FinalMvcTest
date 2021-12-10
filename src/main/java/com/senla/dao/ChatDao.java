@@ -2,6 +2,8 @@ package com.senla.dao;
 
 import com.senla.api.dao.IChatDao;
 import com.senla.model.Chat;
+import com.senla.model.Chat_;
+import com.senla.model.UserProfile_;
 import com.senla.model.dto.filter.ChatFilter;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
@@ -26,13 +28,13 @@ public class ChatDao extends AbstractFilterDao<Chat, ChatFilter> implements ICha
         List<Predicate> predicates = new ArrayList<>();
 
         if (chatFilter.getId() != null) {
-            predicates.add(builder.equal(root.get("id"), chatFilter.getId()));
+            predicates.add(builder.equal(root.get(Chat_.ID), chatFilter.getId()));
         }
         if (!ObjectUtils.isEmpty(chatFilter.getName())) {
-            predicates.add(builder.like(root.get("name"), "%" + chatFilter.getName() + "%"));
+            predicates.add(builder.like(root.get(Chat_.NAME), "%" + chatFilter.getName() + "%"));
         }
         if (chatFilter.getUserProfileId() != null) {
-            predicates.add(builder.equal(root.join("users").get("id"), chatFilter.getUserProfileId()));
+            predicates.add(builder.equal(root.get(UserProfile_.ID), chatFilter.getUserProfileId()));
         }
         return predicates.toArray(new Predicate[]{});
     }

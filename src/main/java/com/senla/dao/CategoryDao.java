@@ -2,6 +2,7 @@ package com.senla.dao;
 
 import com.senla.api.dao.ICategoryDao;
 import com.senla.model.Category;
+import com.senla.model.Category_;
 import com.senla.model.dto.filter.CategoryFilter;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
@@ -25,7 +26,7 @@ public class CategoryDao extends AbstractFilterDao<Category, CategoryFilter> imp
         List<Predicate> predicates = new ArrayList<>();
 
         if (!ObjectUtils.isEmpty(categoryFilter.getName())) {
-            predicates.add(builder.like(root.get("name"), "%" + categoryFilter.getName() + "%"));
+            predicates.add(builder.like(root.get(Category_.NAME), "%" + categoryFilter.getName() + "%"));
         }
         return predicates.toArray(new Predicate[]{});
     }
