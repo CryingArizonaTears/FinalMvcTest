@@ -3,7 +3,9 @@ package com.senla.model.dto.filter;
 import com.senla.model.AdStatus;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
+@ToString
 @Getter
 @Setter
 public class AdFilter {

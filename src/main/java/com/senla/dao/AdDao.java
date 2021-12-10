@@ -68,10 +68,10 @@ public class AdDao extends AbstractFilterDao<Ad, AdFilter> implements IAdDao {
             predicates.add(builder.like(root.get(Ad_.NAME), "%" + adFilter.getName() + "%"));
         }
         if (!ObjectUtils.isEmpty(adFilter.getCategoryName())) {
-            predicates.add(builder.like(root.get(Category_.NAME), "%" + adFilter.getCategoryName() + "%"));
+            predicates.add(builder.like(root.join(Ad_.CATEGORY).get(Category_.NAME), "%" + adFilter.getCategoryName() + "%"));
         }
         if (adFilter.getUserId() != null) {
-            predicates.add(builder.equal(root.get(UserProfile_.ID), adFilter.getUserId()));
+            predicates.add(builder.equal(root.join(Ad_.USER_PROFILE).get(UserProfile_.ID), adFilter.getUserId()));
         }
         if (adFilter.getPriceFrom() != null) {
             predicates.add(builder.greaterThanOrEqualTo(root.get(Ad_.PRICE), adFilter.getPriceFrom()));
