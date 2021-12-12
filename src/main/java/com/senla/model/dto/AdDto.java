@@ -4,6 +4,7 @@ import com.senla.model.AdStatus;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -34,7 +35,7 @@ public class AdDto {
                 ", category=" + category +
                 ", description='" + description + '\'' +
                 ", price=" + price +
-                ", userProfile=" + userProfile.getId() +
+                ", userProfile=" + userProfile+
                 ", comments=" + comments +
                 ", maintenances=" + maintenances +
                 ", creationDate=" + creationDate +

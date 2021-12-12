@@ -12,6 +12,7 @@ import com.senla.model.dto.ChatDto;
 import com.senla.model.dto.MessageDto;
 import com.senla.model.dto.filter.ChatFilter;
 import com.senla.modelMapperMethods.ExtendedModelMapper;
+import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+@Log4j
 @Transactional
 @Service
 public class ChatAndMessageService implements IChatAndMessageService {
@@ -35,6 +37,7 @@ public class ChatAndMessageService implements IChatAndMessageService {
 
     @Override
     public void sendMessage(MessageDto messageDto) {
+        log.debug("Method: sendMessage, входящий: " + messageDto.toString());
         UserProfile sender = modelMapper.map(userService.getCurrentUserProfile(), UserProfile.class);
         Message message = modelMapper.map(messageDto, Message.class);
         Chat chat = chatDao.get(messageDto.getChat().getId());
@@ -42,6 +45,7 @@ public class ChatAndMessageService implements IChatAndMessageService {
         message.setCreationDate(LocalDate.now());
         if (sender.getRole().equals(Role.ROLE_USER)) {
             if (chat.getUsers().stream().anyMatch(userProfile -> userProfile.getId().equals(sender.getId()))) {
+                log.debug("Method: sendMessage, выходящий: " + message.toString());
                 messageDao.save(message);
             } else {
                 throw new SecurityException("Вы не можете отправлять сообщения в чужие чаты");
@@ -53,12 +57,14 @@ public class ChatAndMessageService implements IChatAndMessageService {
             if (messageDto.getDate() != null) {
                 message.setCreationDate(messageDto.getDate());
             }
+            log.debug("Method: sendMessage, выходящий: " + message.toString());
             messageDao.save(message);
         }
     }
 
     @Override
     public void createChat(ChatDto chatDto) {
+        log.debug("Method: createChat, входящий: " + chatDto.toString());
         UserProfile sender = modelMapper.map(userService.getCurrentUserProfile(), UserProfile.class);
         Chat chat = modelMapper.map(chatDto, Chat.class);
         if (sender.getRole().equals(Role.ROLE_USER)) {
@@ -67,20 +73,26 @@ public class ChatAndMessageService implements IChatAndMessageService {
             }
             chat.getUsers().add(sender);
         }
+        log.debug("Method: createChat, выходящий: " + chat.toString());
         chatDao.save(chat);
     }
 
 
     @Override
     public List<ChatDto> getByFilter(ChatFilter chatFilter) {
+        log.debug("Method: getByFilter, входящий: " + chatFilter.toString());
         UserProfile currentUser = modelMapper.map(userService.getCurrentUserProfile(), UserProfile.class);
         if (currentUser.getRole().equals(Role.ROLE_USER)) {
             chatFilter.setUserProfileId(currentUser.getId());
-            return modelMapper.mapList(chatDao.getByFilter(chatFilter), ChatDto.class);
+            List<ChatDto> chatDtos = modelMapper.mapList(chatDao.getByFilter(chatFilter), ChatDto.class);
+            log.debug("Method: getByFilter, выходящий: " + chatDtos.toString());
+            return chatDtos;
         }
         if (chatFilter.getUserProfileId() == null) {
             chatFilter.setUserProfileId(currentUser.getId());
         }
-        return modelMapper.mapList(chatDao.getByFilter(chatFilter), ChatDto.class);
+        List<ChatDto> chatDtos = modelMapper.mapList(chatDao.getByFilter(chatFilter), ChatDto.class);
+        log.debug("Method: getByFilter, выходящий: " + chatDtos.toString());
+        return chatDtos;
     }
 }

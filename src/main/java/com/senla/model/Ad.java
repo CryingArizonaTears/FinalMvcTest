@@ -31,7 +31,7 @@ public class Ad extends AbstractModel {
     private String description;
     @Column(name = "price", nullable = false)
     private Double price;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userId", nullable = false)
     private UserProfile userProfile;
     @OneToMany(mappedBy = "ad", cascade = CascadeType.MERGE)
