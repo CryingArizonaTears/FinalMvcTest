@@ -33,7 +33,7 @@ public class AdDto {
                 ", category=" + category +
                 ", description='" + description + '\'' +
                 ", price=" + price +
-                ", userProfile=" + userProfile.getId() +
+                ", userProfile=" + userProfile +
                 ", comments=" + comments +
                 ", maintenances=" + maintenances +
                 ", creationDate=" + creationDate +
