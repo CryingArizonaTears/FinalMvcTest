@@ -31,6 +31,9 @@ public class RatingService implements IRatingService {
 
     @Override
     public void addMarkToUser(RatingDto ratingDto) {
+        if (ratingDto.getRating() < 0 || ratingDto.getRating() > 5) {
+            throw new RuntimeException("Недопустимая отметка");
+        }
         UserProfile sender = modelMapper.map(userService.getCurrentUserProfile(), UserProfile.class);
         Rating rating = modelMapper.map(ratingDto, Rating.class);
         rating.setSender(sender);
@@ -40,34 +43,37 @@ public class RatingService implements IRatingService {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-        RatingFilter ratingFilter = new RatingFilter();
-        ratingFilter.setReceiver(rating.getReceiver().getId());
-        ratingFilter.setSender(rating.getSender().getId());
-        if (ObjectUtils.isEmpty(ratingDao.getByFilter(ratingFilter))) {
-            rating.setCreationDate(LocalDate.now());
-            ratingDao.save(rating);
-            RatingFilter ratingFilter2 = new RatingFilter();
-            ratingFilter2.setReceiver(rating.getReceiver().getId());
-            UserProfile receiver = userProfileDao.get(rating.getReceiver().getId());
-            List<Rating> ratings = ratingDao.getByFilter(ratingFilter2);
-            Integer sum = 0;
-            for (Rating value : ratings) {
-                sum += value.getRating();
+            if (rating.getSender().getId().equals(rating.getReceiver().getId())) {
+                throw new RuntimeException("Вы не можете поставить себе оценку.");
             }
-            Double avgRating = (double) (sum / ratings.size());
-            receiver.setAvgRating(avgRating);
-            userProfileDao.update(receiver);
-        }
-        if (!ObjectUtils.isEmpty(ratingDao.getByFilter(ratingFilter))) {
-            try {
-                throw new Exception("Пользователь уже получил от Вас оценку.");
-            } catch (Exception e) {
-                e.printStackTrace();
+            RatingFilter ratingFilter = new RatingFilter();
+            ratingFilter.setReceiver(rating.getReceiver().getId());
+            ratingFilter.setSender(rating.getSender().getId());
+            if (ObjectUtils.isEmpty(ratingDao.getByFilter(ratingFilter))) {
+                rating.setCreationDate(LocalDate.now());
+                ratingDao.save(rating);
+                RatingFilter ratingFilter2 = new RatingFilter();
+                ratingFilter2.setReceiver(rating.getReceiver().getId());
+                UserProfile receiver = userProfileDao.get(rating.getReceiver().getId());
+                List<Rating> ratings = ratingDao.getByFilter(ratingFilter2);
+                Integer sum = 0;
+                for (Rating value : ratings) {
+                    sum += value.getRating();
+                }
+                Double avgRating = (double) (sum / ratings.size());
+                receiver.setAvgRating(avgRating);
+                userProfileDao.update(receiver);
+            }
+            if (!ObjectUtils.isEmpty(ratingDao.getByFilter(ratingFilter))) {
+                try {
+                    throw new Exception("Пользователь уже получил от Вас оценку.");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else if (!ObjectUtils.isEmpty(ratingDao.getByFilter(ratingFilter))) {
+                throw new RuntimeException("Пользователь уже получил от Вас оценку.");
             }
         }
     }
-
-
 }
 
