@@ -30,7 +30,7 @@ public class UserProfileDao extends AbstractFilterDao<UserProfile, UserFilter> i
             predicates.add(builder.equal(root.get(UserProfile_.ID), userFilter.getId()));
         }
         if (!ObjectUtils.isEmpty(userFilter.getUsername())) {
-            predicates.add(builder.equal(root.get(UserLogin_.USERNAME), userFilter.getUsername()));
+            predicates.add(builder.equal(root.join(UserProfile_.USER_LOGIN).get(UserLogin_.USERNAME), userFilter.getUsername()));
         }
         return predicates.toArray(new Predicate[]{});
     }
