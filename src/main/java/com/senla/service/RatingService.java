@@ -9,6 +9,7 @@ import com.senla.model.UserProfile;
 import com.senla.model.dto.RatingDto;
 import com.senla.model.dto.filter.RatingFilter;
 import com.senla.modelMapperMethods.ExtendedModelMapper;
+import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,7 @@ import org.springframework.util.ObjectUtils;
 import java.time.LocalDate;
 import java.util.List;
 
+@Log4j
 @Transactional
 @Service
 public class RatingService implements IRatingService {
@@ -31,6 +33,7 @@ public class RatingService implements IRatingService {
 
     @Override
     public void addMarkToUser(RatingDto ratingDto) {
+        log.debug("Method: addMarkToUser, входящий: " + ratingDto.toString());
         if (ratingDto.getRating() < 0 || ratingDto.getRating() > 5) {
             throw new RuntimeException("Недопустимая отметка");
         }
@@ -45,6 +48,7 @@ public class RatingService implements IRatingService {
         ratingFilter.setSender(rating.getSender().getId());
         if (ObjectUtils.isEmpty(ratingDao.getByFilter(ratingFilter))) {
             rating.setCreationDate(LocalDate.now());
+            log.debug("Method: addMarkToUser, выходящий: " + rating.toString());
             ratingDao.save(rating);
             RatingFilter ratingFilter2 = new RatingFilter();
             ratingFilter2.setReceiver(rating.getReceiver().getId());
@@ -56,10 +60,10 @@ public class RatingService implements IRatingService {
             }
             Double avgRating = (double) (sum / ratings.size());
             receiver.setAvgRating(avgRating);
+            log.debug("Method: addMarkToUser, выходящий: " + receiver.toString());
             userProfileDao.update(receiver);
         } else if (!ObjectUtils.isEmpty(ratingDao.getByFilter(ratingFilter))) {
             throw new RuntimeException("Пользователь уже получил от Вас оценку.");
         }
     }
 }
-
