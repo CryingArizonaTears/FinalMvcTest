@@ -1,5 +1,6 @@
 package com.senla.service;
 
+import com.senla.annotation.Logging;
 import com.senla.api.dao.IAdDao;
 import com.senla.api.service.IAdService;
 import com.senla.api.service.IUserService;
@@ -8,7 +9,6 @@ import com.senla.model.dto.AdDto;
 import com.senla.model.dto.UserProfileDto;
 import com.senla.model.dto.filter.AdFilter;
 import com.senla.modelMapperMethods.ExtendedModelMapper;
-import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
-@Log4j
 @Transactional
 @Service
 public class AdService implements IAdService {
@@ -29,25 +28,21 @@ public class AdService implements IAdService {
     private IUserService userService;
 
     @Override
+    @Logging
     public List<AdDto> getByFilter(AdFilter adFilter) {
-        log.debug("Method: getByFilter, входящий: " + adFilter.toString());
         if (!checkAnonymousUser()) {
             UserProfile user = modelMapper.map(userService.getCurrentUserProfile(), UserProfile.class);
             if (user.getRole().equals(Role.ROLE_ADMIN)) {
-                List<AdDto> adDtos = modelMapper.mapList(adDao.getByFilter(adFilter), AdDto.class);
-                log.debug("Method: getByFilter, выходящий: " + adDtos.toString());
-                return adDtos;
+                return modelMapper.mapList(adDao.getByFilter(adFilter), AdDto.class);
             }
         }
         adFilter.setStatus(AdStatus.OPEN);
-        List<AdDto> adDtos = modelMapper.mapList(adDao.getByFilter(adFilter), AdDto.class);
-        log.debug("Method: getByFilter, выходящий: " + adDtos.toString());
-        return adDtos;
+        return modelMapper.mapList(adDao.getByFilter(adFilter), AdDto.class);
     }
 
     @Override
+    @Logging
     public void createAd(AdDto adDto) {
-        log.debug("Method: createAd, входящий: " + adDto.toString());
         UserProfile currentUser = modelMapper.map(userService.getCurrentUserProfile(), UserProfile.class);
         Ad ad = new Ad();
         ad.setStatus(AdStatus.OPEN);
@@ -60,13 +55,12 @@ public class AdService implements IAdService {
         } else if (currentUser.getRole().equals(Role.ROLE_ADMIN)) {
             checkAdParams(adDto, ad);
         }
-        log.debug("Method: createAd, выходящий: " + ad.toString());
         adDao.save(ad);
     }
 
     @Override
+    @Logging
     public void editAd(AdDto adDto) {
-        log.debug("Method: editAd, входящий: " + adDto.toString());
         UserProfileDto currentUser = userService.getCurrentUserProfile();
         Ad ad = adDao.get(adDto.getId());
         if (adDto.getName() != null) {
@@ -80,34 +74,30 @@ public class AdService implements IAdService {
         }
         if (currentUser.getRole().equals(Role.ROLE_USER)) {
             if (currentUser.getId().equals(ad.getUserProfile().getUserLogin().getId())) {
-                log.debug("Method: editAd, выходящий: " + ad.toString());
                 adDao.update(ad);
             } else {
                 throw new SecurityException("Вы не можете редактировать чужие объявления");
             }
         } else if (currentUser.getRole().equals(Role.ROLE_ADMIN)) {
             checkAdParams(adDto, ad);
-            log.debug("Method: editAd, выходящий: " + ad.toString());
             adDao.update(ad);
         }
     }
 
     @Override
+    @Logging
     public void deleteAd(Long id) {
-        log.debug("Method: deleteAd, входящий: " + id);
         UserProfile currentUser = modelMapper.map(userService.getCurrentUserProfile(), UserProfile.class);
         Ad ad = adDao.get(id);
         if (currentUser.getRole().equals(Role.ROLE_USER)) {
             if (ad.getUserProfile().equals(currentUser)) {
                 ad.setStatus(AdStatus.CLOSED);
-                log.debug("Method: deleteAd, выходящий: " + ad.toString());
                 adDao.update(ad);
             } else {
                 throw new SecurityException("Вы не можете редактировать чужие объявления");
             }
         } else if (currentUser.getRole().equals(Role.ROLE_ADMIN)) {
             ad.setStatus(AdStatus.CLOSED);
-            log.debug("Method: deleteAd, выходящий: " + ad.toString());
             adDao.update(ad);
         }
     }
@@ -136,10 +126,9 @@ public class AdService implements IAdService {
         }
     }
 
+    @Logging
     private boolean checkAnonymousUser() {
-        boolean bool = SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser");
-        log.debug("Method: checkAnonymousUser, выходящий: " + bool);
-        return bool;
+        return SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser");
     }
 
 }

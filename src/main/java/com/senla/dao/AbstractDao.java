@@ -1,5 +1,6 @@
 package com.senla.dao;
 
+import com.senla.annotation.Logging;
 import com.senla.api.dao.IAbstractDao;
 import com.senla.model.AbstractModel;
 import org.hibernate.Session;
@@ -17,6 +18,7 @@ public abstract class AbstractDao<T extends AbstractModel> implements IAbstractD
     protected SessionFactory sessionFactory;
 
     @Transactional
+    @Logging
     public List<T> getAll() {
         CriteriaBuilder builder = getCurrentSession().getCriteriaBuilder();
         CriteriaQuery<T> query = builder.createQuery(getClazz());
@@ -26,22 +28,23 @@ public abstract class AbstractDao<T extends AbstractModel> implements IAbstractD
     }
 
     @Transactional
+    @Logging
     public T get(Long id) {
         return getCurrentSession().find(getClazz(), id);
     }
 
-
+    @Logging
     public T update(T entity) {
         getCurrentSession().merge(entity);
         return entity;
     }
 
-
+    @Logging
     public void save(T entity) {
         getCurrentSession().persist(entity);
     }
 
-
+    @Logging
     public void delete(Long id) {
         T bufEntity = getCurrentSession().find(getClazz(), id);
         getCurrentSession().remove(bufEntity);

@@ -1,5 +1,6 @@
 package com.senla.service;
 
+import com.senla.annotation.Logging;
 import com.senla.api.dao.ICommentDao;
 import com.senla.api.service.ICommentService;
 import com.senla.api.service.IUserService;
@@ -9,14 +10,12 @@ import com.senla.model.Role;
 import com.senla.model.UserProfile;
 import com.senla.model.dto.CommentDto;
 import com.senla.modelMapperMethods.ExtendedModelMapper;
-import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
-@Log4j
 @Transactional
 @Service
 public class CommentService implements ICommentService {
@@ -28,8 +27,8 @@ public class CommentService implements ICommentService {
     private IUserService userService;
 
     @Override
+    @Logging
     public void createComment(CommentDto commentDto) {
-        log.debug("Method: createComment, входящий: " + commentDto.toString());
         UserProfile currentUser = modelMapper.map(userService.getCurrentUserProfile(), UserProfile.class);
         Comment comment = new Comment();
         Ad ad = new Ad();
@@ -46,7 +45,6 @@ public class CommentService implements ICommentService {
                 comment.setUserProfile(modelMapper.map(commentDto.getUserProfile(), UserProfile.class));
             }
         }
-        log.debug("Method: createComment, выходящий: " + comment.toString());
         commentDao.save(comment);
     }
 }

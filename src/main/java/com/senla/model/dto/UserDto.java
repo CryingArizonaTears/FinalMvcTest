@@ -6,10 +6,17 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
 public class UserDto {
 
     private String username;
     private String password;
     private String fullName;
+
+    @Override
+    public String toString() {
+        return "UserDto{" +
+                "username='" + username + '\'' +
+                ", fullName='" + fullName + '\'' +
+                '}';
+    }
 }
