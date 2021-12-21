@@ -2,6 +2,7 @@ package com.senla.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -10,6 +11,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@ToString
 @Entity
 @Table(name = "chat")
 public class Chat extends AbstractModel {
@@ -28,14 +30,4 @@ public class Chat extends AbstractModel {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "chat")
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Message> messages;
-
-    @Override
-    public String toString() {
-        return "Chat{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", users=" + users +
-                ", messages=" + messages +
-                '}';
-    }
 }

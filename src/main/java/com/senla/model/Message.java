@@ -2,12 +2,14 @@ package com.senla.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Getter
 @Setter
+@ToString
 @Entity
 @Table(name = "message")
 public class Message extends AbstractModel {
@@ -16,6 +18,7 @@ public class Message extends AbstractModel {
     private Long id;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "chatId", nullable = false)
+    @ToString.Exclude
     private Chat chat;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userSenderId", nullable = false)
@@ -24,14 +27,4 @@ public class Message extends AbstractModel {
     private String text;
     @Column(name = "creationDate", nullable = false)
     private LocalDate creationDate;
-
-    @Override
-    public String toString() {
-        return "Message{" +
-                "id=" + id +
-                ", sender=" + sender.getId() +
-                ", text='" + text + '\'' +
-                ", creationDate=" + creationDate +
-                '}';
-    }
 }

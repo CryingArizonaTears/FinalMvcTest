@@ -2,6 +2,7 @@ package com.senla.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@ToString
 @Entity
 @Table(name = "ad")
 public class Ad extends AbstractModel {
@@ -47,21 +49,4 @@ public class Ad extends AbstractModel {
     private List<Maintenance> maintenances;
     @Column(name = "creationDate", nullable = false)
     private LocalDate creationDate;
-
-    @Override
-    public String toString() {
-        return "Ad{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", status=" + status +
-                ", premiumUntilDate=" + premiumUntilDate +
-                ", category=" + category +
-                ", description='" + description + '\'' +
-                ", price=" + price +
-                ", userProfile=" + userProfile.getId() +
-                ", comments=" + comments +
-                ", maintenances=" + maintenances +
-                ", creationDate=" + creationDate +
-                '}';
-    }
 }

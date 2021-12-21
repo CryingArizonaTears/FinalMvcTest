@@ -2,12 +2,14 @@ package com.senla.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Getter
 @Setter
+@ToString
 @Entity
 @Table(name = "rating")
 public class Rating extends AbstractModel {
@@ -24,15 +26,4 @@ public class Rating extends AbstractModel {
     private UserProfile receiver;
     @Column(name = "creationDate", nullable = false)
     private LocalDate creationDate;
-
-    @Override
-    public String toString() {
-        return "Rating{" +
-                "id=" + id +
-                ", rating=" + rating +
-                ", sender=" + sender.getId() +
-                ", receiver=" + receiver.getId() +
-                ", creationDate=" + creationDate +
-                '}';
-    }
 }

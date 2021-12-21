@@ -14,19 +14,9 @@ public class CommentDto {
 
     private Long id;
     @JsonIgnore
+    @ToString.Exclude
     private AdDto ad;
     private UserProfileDto userProfile;
     private String text;
     private LocalDate creationDate;
-
-    @Override
-    public String toString() {
-        return "CommentDto{" +
-                "id=" + id +
-                ", ad=" + ad.getId() +
-                ", userProfile=" + userProfile.getId() +
-                ", text='" + text + '\'' +
-                ", creationDate=" + creationDate +
-                '}';
-    }
 }
