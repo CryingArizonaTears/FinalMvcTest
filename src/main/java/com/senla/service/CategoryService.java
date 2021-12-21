@@ -1,5 +1,6 @@
 package com.senla.service;
 
+import com.senla.annotation.Logging;
 import com.senla.api.dao.ICategoryDao;
 import com.senla.api.service.ICategoryService;
 import com.senla.model.Category;
@@ -21,12 +22,14 @@ public class CategoryService implements ICategoryService {
     private ExtendedModelMapper modelMapper;
 
     @Override
+    @Logging
     public void createCategory(CategoryDto categoryDto) {
         Category category = modelMapper.map(categoryDto, Category.class);
         categoryDao.save(category);
     }
 
     @Override
+    @Logging
     public List<CategoryDto> getByFilter(CategoryFilter categoryFilter) {
         return modelMapper.mapList(categoryDao.getByFilter(categoryFilter), CategoryDto.class);
     }

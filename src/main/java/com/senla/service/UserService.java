@@ -1,5 +1,6 @@
 package com.senla.service;
 
+import com.senla.annotation.Logging;
 import com.senla.api.dao.IAdDao;
 import com.senla.api.dao.IUserLoginDao;
 import com.senla.api.dao.IUserProfileDao;
@@ -44,8 +45,8 @@ public class UserService implements IUserService {
 
 
     @Override
+    @Logging
     public void registration(UserDto userDto) {
-
         UserProfile userProfile = modelMapper.map(userDto, UserProfile.class);
         UserLogin userLoginBuf = modelMapper.map(userDto, UserLogin.class);
         UserLogin userLogin = new UserLogin();
@@ -60,8 +61,8 @@ public class UserService implements IUserService {
     }
 
     @Override
+    @Logging
     public void editPassword(UserCredentialsDto userCredentialsDto) {
-
         UserProfile currentUser = modelMapper.map(userService.getCurrentUserProfile(), UserProfile.class);
         UserLogin userLogin = new UserLogin();
         userLogin.setId(userCredentialsDto.getId());
@@ -79,8 +80,8 @@ public class UserService implements IUserService {
 
 
     @Override
+    @Logging
     public void editProfile(UserProfileDto userProfileDto) {
-
         UserProfile currentUser = modelMapper.map(userService.getCurrentUserProfile(), UserProfile.class);
         UserProfile userProfile = userDao.get(userProfileDto.getId());
         if (userProfileDto.getFullName() != null) {
@@ -101,11 +102,13 @@ public class UserService implements IUserService {
     }
 
     @Override
+    @Logging
     public UserProfileDto getById(Long id) {
         return modelMapper.map(userDao.get(id), UserProfileDto.class);
     }
 
     @Override
+    @Logging
     public UserProfileDto getUserProfileByUsername(String username) {
         UserFilter userFilter = new UserFilter();
         userFilter.setUsername(username);
@@ -116,6 +119,7 @@ public class UserService implements IUserService {
     }
 
     @Override
+    @Logging
     public UserCredentialsDto getEncryptedUserCredentials(UserDto userDto) {
         UserCredentialsDto userCredentialsByUsername = getUserProfileByUsername(userDto.getUsername()).getUserLogin();
         if (!ObjectUtils.isEmpty(userCredentialsByUsername)) {
@@ -127,6 +131,7 @@ public class UserService implements IUserService {
     }
 
     @Override
+    @Logging
     public UserProfileDto getCurrentUserProfile() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
@@ -134,6 +139,7 @@ public class UserService implements IUserService {
     }
 
     @Override
+    @Logging
     public List<AdDto> salesHistory(Long id) {
         AdFilter adFilter = new AdFilter();
         adFilter.setUserId(id);

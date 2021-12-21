@@ -1,5 +1,6 @@
 package com.senla.service;
 
+import com.senla.annotation.Logging;
 import com.senla.api.dao.IAdDao;
 import com.senla.api.service.IAdService;
 import com.senla.api.service.IUserService;
@@ -27,6 +28,7 @@ public class AdService implements IAdService {
     private IUserService userService;
 
     @Override
+    @Logging
     public List<AdDto> getByFilter(AdFilter adFilter) {
         if (!checkAnonymousUser()) {
             UserProfile user = modelMapper.map(userService.getCurrentUserProfile(), UserProfile.class);
@@ -39,6 +41,7 @@ public class AdService implements IAdService {
     }
 
     @Override
+    @Logging
     public void createAd(AdDto adDto) {
         UserProfile currentUser = modelMapper.map(userService.getCurrentUserProfile(), UserProfile.class);
         Ad ad = new Ad();
@@ -56,6 +59,7 @@ public class AdService implements IAdService {
     }
 
     @Override
+    @Logging
     public void editAd(AdDto adDto) {
         UserProfileDto currentUser = userService.getCurrentUserProfile();
         Ad ad = adDao.get(adDto.getId());
@@ -81,6 +85,7 @@ public class AdService implements IAdService {
     }
 
     @Override
+    @Logging
     public void deleteAd(Long id) {
         UserProfile currentUser = modelMapper.map(userService.getCurrentUserProfile(), UserProfile.class);
         Ad ad = adDao.get(id);
@@ -121,6 +126,7 @@ public class AdService implements IAdService {
         }
     }
 
+    @Logging
     private boolean checkAnonymousUser() {
         return SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser");
     }

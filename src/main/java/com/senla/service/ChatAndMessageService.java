@@ -1,5 +1,6 @@
 package com.senla.service;
 
+import com.senla.annotation.Logging;
 import com.senla.api.dao.IChatDao;
 import com.senla.api.dao.IMessageDao;
 import com.senla.api.service.IChatAndMessageService;
@@ -34,6 +35,7 @@ public class ChatAndMessageService implements IChatAndMessageService {
 
 
     @Override
+    @Logging
     public void sendMessage(MessageDto messageDto) {
         UserProfile sender = modelMapper.map(userService.getCurrentUserProfile(), UserProfile.class);
         Message message = modelMapper.map(messageDto, Message.class);
@@ -58,6 +60,7 @@ public class ChatAndMessageService implements IChatAndMessageService {
     }
 
     @Override
+    @Logging
     public void createChat(ChatDto chatDto) {
         UserProfile sender = modelMapper.map(userService.getCurrentUserProfile(), UserProfile.class);
         Chat chat = modelMapper.map(chatDto, Chat.class);
@@ -72,6 +75,7 @@ public class ChatAndMessageService implements IChatAndMessageService {
 
 
     @Override
+    @Logging
     public List<ChatDto> getByFilter(ChatFilter chatFilter) {
         UserProfile currentUser = modelMapper.map(userService.getCurrentUserProfile(), UserProfile.class);
         if (currentUser.getRole().equals(Role.ROLE_USER)) {

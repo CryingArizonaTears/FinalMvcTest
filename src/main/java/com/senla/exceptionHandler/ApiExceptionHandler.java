@@ -1,5 +1,6 @@
 package com.senla.exceptionHandler;
 
+import com.senla.annotation.LoggingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 @ControllerAdvice
 public class ApiExceptionHandler {
 
+    @LoggingException
     @ExceptionHandler(value = {Exception.class})
     public ResponseEntity<Object> handleApiRequestException(Exception e) {
         HttpStatus badRequest = HttpStatus.BAD_REQUEST;

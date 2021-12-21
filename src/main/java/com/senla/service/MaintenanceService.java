@@ -1,5 +1,6 @@
 package com.senla.service;
 
+import com.senla.annotation.Logging;
 import com.senla.api.dao.IAdDao;
 import com.senla.api.dao.IMaintenanceDao;
 import com.senla.api.service.IMaintenanceService;
@@ -31,18 +32,20 @@ public class MaintenanceService implements IMaintenanceService {
     private IUserService userService;
 
     @Override
+    @Logging
     public void createMaintenance(MaintenanceDto maintenanceDto) {
-
         Maintenance maintenance = modelMapper.map(maintenanceDto, Maintenance.class);
         maintenanceDao.save(maintenance);
     }
 
     @Override
+    @Logging
     public List<MaintenanceDto> getByFilter(MaintenanceFilter maintenanceFilter) {
         return modelMapper.mapList(maintenanceDao.getByFilter(maintenanceFilter), MaintenanceDto.class);
     }
 
     @Override
+    @Logging
     public void addMaintenanceToAd(Long adId, MaintenanceDto maintenanceDto) {
         UserProfile userProfile = modelMapper.map(userService.getCurrentUserProfile(), UserProfile.class);
         Ad ad = adDao.get(adId);

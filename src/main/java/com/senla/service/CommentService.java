@@ -1,5 +1,6 @@
 package com.senla.service;
 
+import com.senla.annotation.Logging;
 import com.senla.api.dao.ICommentDao;
 import com.senla.api.service.ICommentService;
 import com.senla.api.service.IUserService;
@@ -26,6 +27,7 @@ public class CommentService implements ICommentService {
     private IUserService userService;
 
     @Override
+    @Logging
     public void createComment(CommentDto commentDto) {
         UserProfile currentUser = modelMapper.map(userService.getCurrentUserProfile(), UserProfile.class);
         Comment comment = new Comment();

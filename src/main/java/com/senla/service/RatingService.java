@@ -1,5 +1,6 @@
 package com.senla.service;
 
+import com.senla.annotation.Logging;
 import com.senla.api.dao.IRatingDao;
 import com.senla.api.dao.IUserProfileDao;
 import com.senla.api.service.IRatingService;
@@ -30,6 +31,7 @@ public class RatingService implements IRatingService {
     private IUserService userService;
 
     @Override
+    @Logging
     public void addMarkToUser(RatingDto ratingDto) {
         if (ratingDto.getRating() < 0 || ratingDto.getRating() > 5) {
             throw new RuntimeException("Недопустимая отметка");
@@ -62,4 +64,3 @@ public class RatingService implements IRatingService {
         }
     }
 }
-
