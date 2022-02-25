@@ -17,11 +17,5 @@ public interface IUserService {
 
     UserProfileDto getById(Long id);
 
-    UserProfileDto getUserProfileByUsername(String username);
-
-    UserCredentialsDto getEncryptedUserCredentials(UserDto userDto);
-
-    UserProfileDto getCurrentUserProfile();
-
     List<AdDto> salesHistory(Long id);
 }

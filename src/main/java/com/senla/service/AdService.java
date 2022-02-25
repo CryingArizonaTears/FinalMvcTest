@@ -3,7 +3,7 @@ package com.senla.service;
 import com.senla.annotation.Logging;
 import com.senla.api.dao.IAdDao;
 import com.senla.api.service.IAdService;
-import com.senla.api.service.IUserService;
+import com.senla.api.service.IUserAuthenticationService;
 import com.senla.model.*;
 import com.senla.model.dto.AdDto;
 import com.senla.model.dto.UserProfileDto;
@@ -25,13 +25,13 @@ public class AdService implements IAdService {
     @Autowired
     private ExtendedModelMapper modelMapper;
     @Autowired
-    private IUserService userService;
+    private IUserAuthenticationService userAuthenticationService;
 
     @Override
     @Logging
     public List<AdDto> getByFilter(AdFilter adFilter) {
         if (!checkAnonymousUser()) {
-            UserProfile user = modelMapper.map(userService.getCurrentUserProfile(), UserProfile.class);
+            UserProfile user = modelMapper.map(userAuthenticationService.getCurrentUserProfile(), UserProfile.class);
             if (user.getRole().equals(Role.ROLE_ADMIN)) {
                 return modelMapper.mapList(adDao.getByFilter(adFilter), AdDto.class);
             }
@@ -43,7 +43,7 @@ public class AdService implements IAdService {
     @Override
     @Logging
     public void createAd(AdDto adDto) {
-        UserProfile currentUser = modelMapper.map(userService.getCurrentUserProfile(), UserProfile.class);
+        UserProfile currentUser = modelMapper.map(userAuthenticationService.getCurrentUserProfile(), UserProfile.class);
         Ad ad = new Ad();
         ad.setStatus(AdStatus.OPEN);
         ad.setCreationDate(LocalDate.now());
@@ -61,7 +61,7 @@ public class AdService implements IAdService {
     @Override
     @Logging
     public void editAd(AdDto adDto) {
-        UserProfileDto currentUser = userService.getCurrentUserProfile();
+        UserProfileDto currentUser = userAuthenticationService.getCurrentUserProfile();
         Ad ad = adDao.get(adDto.getId());
         if (adDto.getName() != null) {
             ad.setName(adDto.getName());
@@ -87,7 +87,7 @@ public class AdService implements IAdService {
     @Override
     @Logging
     public void deleteAd(Long id) {
-        UserProfile currentUser = modelMapper.map(userService.getCurrentUserProfile(), UserProfile.class);
+        UserProfile currentUser = modelMapper.map(userAuthenticationService.getCurrentUserProfile(), UserProfile.class);
         Ad ad = adDao.get(id);
         if (currentUser.getRole().equals(Role.ROLE_USER)) {
             if (ad.getUserProfile().equals(currentUser)) {

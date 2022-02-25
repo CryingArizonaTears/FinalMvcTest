@@ -4,6 +4,7 @@ import com.senla.annotation.Logging;
 import com.senla.api.dao.IAdDao;
 import com.senla.api.dao.IUserLoginDao;
 import com.senla.api.dao.IUserProfileDao;
+import com.senla.api.service.IUserAuthenticationService;
 import com.senla.api.service.IUserService;
 import com.senla.model.AdStatus;
 import com.senla.model.Role;
@@ -14,16 +15,11 @@ import com.senla.model.dto.UserCredentialsDto;
 import com.senla.model.dto.UserDto;
 import com.senla.model.dto.UserProfileDto;
 import com.senla.model.dto.filter.AdFilter;
-import com.senla.model.dto.filter.UserFilter;
 import com.senla.modelMapperMethods.ExtendedModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 
@@ -41,7 +37,7 @@ public class UserService implements IUserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
-    private IUserService userService;
+    private IUserAuthenticationService userAuthenticationService;
 
 
     @Override
@@ -63,7 +59,7 @@ public class UserService implements IUserService {
     @Override
     @Logging
     public void editPassword(UserCredentialsDto userCredentialsDto) {
-        UserProfile currentUser = modelMapper.map(userService.getCurrentUserProfile(), UserProfile.class);
+        UserProfile currentUser = modelMapper.map(userAuthenticationService.getCurrentUserProfile(), UserProfile.class);
         UserLogin userLogin = new UserLogin();
         userLogin.setId(userCredentialsDto.getId());
         userLogin.setPassword(passwordEncoder.encode(userCredentialsDto.getPassword()));
@@ -82,7 +78,7 @@ public class UserService implements IUserService {
     @Override
     @Logging
     public void editProfile(UserProfileDto userProfileDto) {
-        UserProfile currentUser = modelMapper.map(userService.getCurrentUserProfile(), UserProfile.class);
+        UserProfile currentUser = modelMapper.map(userAuthenticationService.getCurrentUserProfile(), UserProfile.class);
         UserProfile userProfile = userDao.get(userProfileDto.getId());
         if (userProfileDto.getFullName() != null) {
             userProfile.setFullName(userProfileDto.getFullName());
@@ -107,36 +103,6 @@ public class UserService implements IUserService {
         return modelMapper.map(userDao.get(id), UserProfileDto.class);
     }
 
-    @Override
-    @Logging
-    public UserProfileDto getUserProfileByUsername(String username) {
-        UserFilter userFilter = new UserFilter();
-        userFilter.setUsername(username);
-        return userDao.getByFilter(userFilter).stream()
-                .findFirst()
-                .map(userProfile -> modelMapper.map(userProfile, UserProfileDto.class))
-                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
-    }
-
-    @Override
-    @Logging
-    public UserCredentialsDto getEncryptedUserCredentials(UserDto userDto) {
-        UserCredentialsDto userCredentialsByUsername = getUserProfileByUsername(userDto.getUsername()).getUserLogin();
-        if (!ObjectUtils.isEmpty(userCredentialsByUsername)) {
-            if (passwordEncoder.matches(userDto.getPassword(), userCredentialsByUsername.getPassword())) {
-                return userCredentialsByUsername;
-            }
-        }
-        throw new SecurityException("Неправильный логин или пароль");
-    }
-
-    @Override
-    @Logging
-    public UserProfileDto getCurrentUserProfile() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentPrincipalName = authentication.getName();
-        return getUserProfileByUsername(currentPrincipalName);
-    }
 
     @Override
     @Logging

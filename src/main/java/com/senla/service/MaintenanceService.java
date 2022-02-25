@@ -4,7 +4,7 @@ import com.senla.annotation.Logging;
 import com.senla.api.dao.IAdDao;
 import com.senla.api.dao.IMaintenanceDao;
 import com.senla.api.service.IMaintenanceService;
-import com.senla.api.service.IUserService;
+import com.senla.api.service.IUserAuthenticationService;
 import com.senla.model.Ad;
 import com.senla.model.Maintenance;
 import com.senla.model.Role;
@@ -29,7 +29,7 @@ public class MaintenanceService implements IMaintenanceService {
     @Autowired
     private ExtendedModelMapper modelMapper;
     @Autowired
-    private IUserService userService;
+    private IUserAuthenticationService userAuthenticationService;
 
     @Override
     @Logging
@@ -47,7 +47,7 @@ public class MaintenanceService implements IMaintenanceService {
     @Override
     @Logging
     public void addMaintenanceToAd(Long adId, MaintenanceDto maintenanceDto) {
-        UserProfile userProfile = modelMapper.map(userService.getCurrentUserProfile(), UserProfile.class);
+        UserProfile userProfile = modelMapper.map(userAuthenticationService.getCurrentUserProfile(), UserProfile.class);
         Ad ad = adDao.get(adId);
         Maintenance maintenance = modelMapper.map(maintenanceDto, Maintenance.class);
         ad.getMaintenances().add(maintenance);
