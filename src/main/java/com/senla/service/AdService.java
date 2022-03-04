@@ -47,10 +47,11 @@ public class AdService implements IAdService {
         Ad ad = new Ad();
         ad.setStatus(AdStatus.OPEN);
         ad.setCreationDate(LocalDate.now());
+        ad.setName(adDto.getName());
+        ad.setDescription(adDto.getDescription());
+        ad.setCategory(modelMapper.map(adDto.getCategory(), Category.class));
+        ad.setPrice(adDto.getPrice());
         if (currentUser.getRole().equals(Role.ROLE_USER)) {
-            ad.setId(adDto.getId());
-            ad.setName(adDto.getName());
-            ad.setDescription(adDto.getDescription());
             ad.setUserProfile(currentUser);
         } else if (currentUser.getRole().equals(Role.ROLE_ADMIN)) {
             checkAdParams(adDto, ad);
@@ -73,12 +74,15 @@ public class AdService implements IAdService {
             ad.setPrice(adDto.getPrice());
         }
         if (currentUser.getRole().equals(Role.ROLE_USER)) {
-            if (currentUser.getId().equals(ad.getUserProfile().getUserLogin().getId())) {
+            if (currentUser.getId().equals(ad.getUserProfile().getId())) {
                 adDao.update(ad);
             } else {
                 throw new SecurityException("Вы не можете редактировать чужие объявления");
             }
         } else if (currentUser.getRole().equals(Role.ROLE_ADMIN)) {
+            if (adDto.getCategory() != null) {
+                ad.setCategory(modelMapper.map(adDto.getCategory(), Category.class));
+            }
             checkAdParams(adDto, ad);
             adDao.update(ad);
         }
@@ -90,7 +94,7 @@ public class AdService implements IAdService {
         UserProfile currentUser = modelMapper.map(userAuthenticationService.getCurrentUserProfile(), UserProfile.class);
         Ad ad = adDao.get(id);
         if (currentUser.getRole().equals(Role.ROLE_USER)) {
-            if (ad.getUserProfile().equals(currentUser)) {
+            if (ad.getUserProfile().getId().equals(currentUser.getId())) {
                 ad.setStatus(AdStatus.CLOSED);
                 adDao.update(ad);
             } else {
@@ -108,9 +112,6 @@ public class AdService implements IAdService {
         }
         if (adDto.getPremiumUntilDate() != null) {
             ad.setPremiumUntilDate(adDto.getPremiumUntilDate());
-        }
-        if (adDto.getCategory() != null) {
-            ad.setCategory(modelMapper.map(adDto.getCategory(), Category.class));
         }
         if (adDto.getMaintenances() != null) {
             ad.setMaintenances(modelMapper.mapList(adDto.getMaintenances(), Maintenance.class));
