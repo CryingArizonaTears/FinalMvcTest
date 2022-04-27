@@ -4,7 +4,7 @@ import com.senla.annotation.Logging;
 import com.senla.api.dao.IRatingDao;
 import com.senla.api.dao.IUserProfileDao;
 import com.senla.api.service.IRatingService;
-import com.senla.api.service.IUserService;
+import com.senla.api.service.IUserAuthenticationService;
 import com.senla.model.Rating;
 import com.senla.model.UserProfile;
 import com.senla.model.dto.RatingDto;
@@ -28,7 +28,7 @@ public class RatingService implements IRatingService {
     @Autowired
     private ExtendedModelMapper modelMapper;
     @Autowired
-    private IUserService userService;
+    private IUserAuthenticationService userAuthenticationService;
 
     @Override
     @Logging
@@ -36,7 +36,7 @@ public class RatingService implements IRatingService {
         if (ratingDto.getRating() < 0 || ratingDto.getRating() > 5) {
             throw new RuntimeException("Недопустимая отметка");
         }
-        UserProfile sender = modelMapper.map(userService.getCurrentUserProfile(), UserProfile.class);
+        UserProfile sender = modelMapper.map(userAuthenticationService.getCurrentUserProfile(), UserProfile.class);
         Rating rating = modelMapper.map(ratingDto, Rating.class);
         rating.setSender(sender);
         if (rating.getSender().getId().equals(rating.getReceiver().getId())) {

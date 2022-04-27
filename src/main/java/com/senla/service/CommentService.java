@@ -3,7 +3,7 @@ package com.senla.service;
 import com.senla.annotation.Logging;
 import com.senla.api.dao.ICommentDao;
 import com.senla.api.service.ICommentService;
-import com.senla.api.service.IUserService;
+import com.senla.api.service.IUserAuthenticationService;
 import com.senla.model.Ad;
 import com.senla.model.Comment;
 import com.senla.model.Role;
@@ -24,12 +24,12 @@ public class CommentService implements ICommentService {
     @Autowired
     private ExtendedModelMapper modelMapper;
     @Autowired
-    private IUserService userService;
+    private IUserAuthenticationService userAuthenticationService;
 
     @Override
     @Logging
     public void createComment(CommentDto commentDto) {
-        UserProfile currentUser = modelMapper.map(userService.getCurrentUserProfile(), UserProfile.class);
+        UserProfile currentUser = modelMapper.map(userAuthenticationService.getCurrentUserProfile(), UserProfile.class);
         Comment comment = new Comment();
         Ad ad = new Ad();
         ad.setId(commentDto.getAd().getId());

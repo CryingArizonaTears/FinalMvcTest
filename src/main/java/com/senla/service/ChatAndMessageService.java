@@ -4,7 +4,7 @@ import com.senla.annotation.Logging;
 import com.senla.api.dao.IChatDao;
 import com.senla.api.dao.IMessageDao;
 import com.senla.api.service.IChatAndMessageService;
-import com.senla.api.service.IUserService;
+import com.senla.api.service.IUserAuthenticationService;
 import com.senla.model.Chat;
 import com.senla.model.Message;
 import com.senla.model.Role;
@@ -31,13 +31,13 @@ public class ChatAndMessageService implements IChatAndMessageService {
     @Autowired
     private ExtendedModelMapper modelMapper;
     @Autowired
-    private IUserService userService;
+    private IUserAuthenticationService userAuthenticationService;
 
 
     @Override
     @Logging
     public void sendMessage(MessageDto messageDto) {
-        UserProfile sender = modelMapper.map(userService.getCurrentUserProfile(), UserProfile.class);
+        UserProfile sender = modelMapper.map(userAuthenticationService.getCurrentUserProfile(), UserProfile.class);
         Message message = modelMapper.map(messageDto, Message.class);
         Chat chat = chatDao.get(messageDto.getChat().getId());
         message.setSender(sender);
@@ -62,7 +62,7 @@ public class ChatAndMessageService implements IChatAndMessageService {
     @Override
     @Logging
     public void createChat(ChatDto chatDto) {
-        UserProfile sender = modelMapper.map(userService.getCurrentUserProfile(), UserProfile.class);
+        UserProfile sender = modelMapper.map(userAuthenticationService.getCurrentUserProfile(), UserProfile.class);
         Chat chat = modelMapper.map(chatDto, Chat.class);
         if (sender.getRole().equals(Role.ROLE_USER)) {
             if (chat.getUsers() == null) {
@@ -77,7 +77,7 @@ public class ChatAndMessageService implements IChatAndMessageService {
     @Override
     @Logging
     public List<ChatDto> getByFilter(ChatFilter chatFilter) {
-        UserProfile currentUser = modelMapper.map(userService.getCurrentUserProfile(), UserProfile.class);
+        UserProfile currentUser = modelMapper.map(userAuthenticationService.getCurrentUserProfile(), UserProfile.class);
         if (currentUser.getRole().equals(Role.ROLE_USER)) {
             chatFilter.setUserProfileId(currentUser.getId());
             return modelMapper.mapList(chatDao.getByFilter(chatFilter), ChatDto.class);
