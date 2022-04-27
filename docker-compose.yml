@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  mysql:
+    image: 'mysql:latest'
+    container_name: 'java-mysql'
+    environment:
+      - 'MYSQL_DATABASE=final'
+      - 'MYSQL_USER=test'
+      - 'MYSQL_PASSWORD=1234'
+      - 'MYSQL_ROOT_PASSWORD=1234'
+    volumes:
+      - ./scriptsForDB:/docker-entrypoint-initdb.d
+    networks:
+      - testnetwork2
+
+  app:
+    build: ./
+    container_name: 'java-app-mysql'
+    ports:
+      - 8081:8081
+    networks:
+      - testnetwork2
+
+networks:
+  testnetwork2:
+
+
+
+
+

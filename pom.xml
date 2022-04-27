@@ -323,7 +323,7 @@
 
                             <httpConnector>
                                 <port>8081</port>
-                                <host>localhost</host>
+                                <host>app</host> <!-- если через докер - поставить название сервиса, если в идее - локалхост-->
                             </httpConnector>
                         </configuration>
                     </plugin>
